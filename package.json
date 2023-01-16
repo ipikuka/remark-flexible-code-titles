@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc --watch"
+    "build": "tsc --watch",
+    "lint": "eslint \"{**/*,*}.{js,ts}\""
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,9 @@
   "homepage": "https://github.com/ipikuka/remark-flexible-code-titles#readme",
   "devDependencies": {
     "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.48.2",
+    "@typescript-eslint/parser": "^5.48.2",
+    "eslint": "^8.32.0",
     "typescript": "^4.9.4"
   }
 }
