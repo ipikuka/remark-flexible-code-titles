@@ -12,6 +12,6 @@
     "noImplicitReturns": true,
     "rootDir": "src",
     "outDir": "dist/esm",
-    "types": ["node"]
+    "types": ["node", "jest"]
   }
 }
