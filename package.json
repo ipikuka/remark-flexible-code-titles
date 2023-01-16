@@ -1,0 +1,30 @@
+{
+  "name": "remark-flexible-code-titles",
+  "version": "1.0.0",
+  "description": "Remark parser plugin to add titles into code blocks in a flexible way",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipikuka/remark-flexible-code-titles.git"
+  },
+  "keywords": [
+    "remark",
+    "remark-plugin",
+    "typescript",
+    "code-titles"
+  ],
+  "author": "ipikuka <talatkuyuk@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ipikuka/remark-flexible-code-titles/issues"
+  },
+  "homepage": "https://github.com/ipikuka/remark-flexible-code-titles#readme",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "typescript": "^4.9.4"
+  }
+}
