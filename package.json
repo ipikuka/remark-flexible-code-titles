@@ -2,26 +2,39 @@
   "name": "remark-flexible-code-titles",
   "version": "1.0.0",
   "description": "Remark parser plugin to add titles into code blocks in a flexible way",
-  "main": "index.js",
   "type": "module",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "scripts": {
-    "build": "tsc --watch",
+    "build": "npm run build:esm && npm run build:cjs",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir dist/cjs",
     "lint": "eslint \"{**/*,*}.{js,ts}\"",
     "prettier": "prettier --write \"{src,tests,example/src}/**/*.{js,ts}\"",
-    "test": "jest --config ./jest.config.cjs"
+    "test": "jest --config ./jest.config.cjs",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run prettier && npm run lint",
+    "prebuild": "rimraf dist"
   },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ipikuka/remark-flexible-code-titles.git"
   },
   "keywords": [
+    "unified",
     "remark",
     "remark-plugin",
-    "typescript",
+    "markdown",
     "code-titles"
   ],
   "author": "ipikuka <talatkuyuk@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ipikuka/remark-flexible-code-titles/issues"
   },
@@ -36,6 +49,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^29.3.1",
     "prettier": "^2.8.3",
+    "rimraf": "^4.1.0",
     "ts-jest": "^29.0.5",
     "typescript": "^4.9.4"
   }
