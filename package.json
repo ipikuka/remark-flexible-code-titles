@@ -1,6 +1,6 @@
 {
   "name": "remark-flexible-code-titles",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Remark parser plugin to add titles into code blocks in a flexible way",
   "type": "module",
   "exports": {

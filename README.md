@@ -201,13 +201,12 @@ let me = "ipikuka";
 ```
 ````
 
-Normally, the above markdown code will be parsed and rehyped as expected, with using _this plugin_ for `the code title` and using the _rehype-prism-plus_ for **line highlighting and numbering**. But, if you want to highlight and number the lines **without specifying language**, you will get the language of the code block as forexample `language-{2}` like strings. Let me give an example:
+Normally, the above markdown code will be parsed and rehyped as expected, with using _remark-flexible-code-titles_ for `the code title` and using the _rehype-prism-plus_ for `line highlighting and numbering`. But, if you want to highlight and number the lines **without specifying language**, you will get the language of the code block as forexample `language-{2}` like strings. Let me give an example:
 
 ````markdown
-```{1, 3-6} showLineNumbers
-This is a line is going to be highlighted and numbered with rehype-prism-plus.
-This is another line with non-related code.
-// the other lines...
+```{2} showLineNumbers
+This is a line which is going to be numbered with rehype-prism-plus.
+This is a line which is going to be highlighted and numbered with rehype-prism-plus.
 ```
 ````
 
@@ -216,26 +215,26 @@ The above markdown, with no language provided, will lead to produce a mdast "cod
 ```json
 {
   "type": "code",
-  "lang": "{1,",
-  "meta": "3-6} showLineNumbers"
+  "lang": "{2}",
+  "meta": "showLineNumbers"
   // other properties
 }
 ```
 
-As a result, the html `code` element will have wrong language:  
-_(The class below in the `code` element is added by the code highlihting plugin that you use)_
+As a result, the html `code` element will have wrong language `language-{2}`:  
+_(The class attribute in the `code` element is added by the code highlighting plugin)_
 
 ```html
-<code class="language-{1, code-highlight">...</code>
+<code class="language-{2} code-highlight">...</code>
 ```
 
-The job that this plugin (remark-flexible-code-titles) handles apart from providing code titles is **to correct the language** as well, producing the below `mdast` and as a result `code` element without language.
+The job the `remark-flexible-code-titles` handles apart from providing code titles is **to correct the language** as well, producing the below `mdast` and as a result `code` element without language.
 
 ```json
 {
   "type": "code",
   "lang": null,
-  "meta": "{1,3-6} showLineNumbers"
+  "meta": "{2} showLineNumbers"
   // other properties
 }
 ```
@@ -244,17 +243,23 @@ The job that this plugin (remark-flexible-code-titles) handles apart from provid
 <code class="code-highlight">...highlighted and numbered lines...</code>
 ```
 
-Further, you can provide the `code title` without any language just after a colon `:`, as well. Even if, there is no space between the title and the line range string, or giving any extra spaces inside the line range strings around the dash `-`. This plugin even handles this kind of mis-typed situations.
+Further, you can provide the `code title` without any language just after a colon `:`, as well.
+
+````markdown
+```:title
+lines...
+```
+````
+
+Further and further, even if, there is no space between the _title_ and the _line range string_, or giving any extra spaces inside the _line range string_ around the dash `-`, this plugin can handles this kind of **mis-typed situations**.
 
 ````markdown
 ```:title{ 1, 3 - 6 }
 lines...
-...
 ```
 ````
 
-With no problem, this plugin (for example _with no options_) ensures to produce the following `mdast` and `html` for the above `markdown code block`:  
-_(Of course, code highlighting will be handled by another remark/rehype plugin, like "rehype-prism-plus")_
+With no problem, the `remark-flexible-code-titles` with default options ensures to produce the following `mdast` and `html` for the above `markdown code block`:  
 
 ```json
 {
@@ -274,7 +279,9 @@ _(Of course, code highlighting will be handled by another remark/rehype plugin, 
 </div>
 ```
 
-**Another flexible usage:** You can use this plugin without providing _no title_, _no container_ with the options `{title: false, container: false}` just for only correcting the line range strings and using this kind of parameters if no language provided in markdown. Hey, that is the flexibility this plugin's name comes from :).
+### Another flexible usage:
+
+You can use this plugin without providing _no title_, _no container_ with the options `{title: false, container: false}` just for only correcting the _line range strings_ and using this kind of parameters **if no language provided in markdown**. Hey, that is the flexibility this plugin's name comes from :).
 
 ## Syntax tree
 
@@ -298,11 +305,18 @@ Use of `remark-flexible-code-titles` does not involve rehype (hast) or user cont
 
 ### Keywords
 
-unified remark remark-plugin mdast markdown mdx "code blocks" "code titles"
+[unified][unifiednpm] [remark][remarknpm] [remark-plugin][remarkpluginnpm] [mdast][mdastnpm] [markdown][markdownnpm] [remark code titles][remarkcodetitlesnpm]
 
 [unified]: https://github.com/unifiedjs/unified
+[unifiednpm]: https://www.npmjs.com/search?q=keywords:unified
 [remark]: https://github.com/remarkjs/remark
+[remarknpm]: https://www.npmjs.com/search?q=keywords:remark
+[remarkpluginnpm]: https://www.npmjs.com/search?q=keywords:remark%20plugin
+[mdast]: https://github.com/syntax-tree/mdast
+[mdastnpm]: https://www.npmjs.com/search?q=keywords:mdast
 [micromark]: https://github.com/micromark/micromark
 [rehypeprismplus]: https://github.com/timlrx/rehype-prism-plus
 [typescript]: https://www.typescriptlang.org/
 [license]: https://github.com/ipikuka/remark-flexible-code-titles/blob/main/LICENSE
+[markdownnpm]: https://www.npmjs.com/search?q=keywords:markdown
+[remarkcodetitlesnpm]: https://www.npmjs.com/search?q=keywords:remark%20code%20titles
