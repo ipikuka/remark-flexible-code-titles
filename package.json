@@ -1,11 +1,17 @@
 {
   "name": "remark-flexible-code-titles",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Remark parser plugin to add titles into code blocks in a flexible way",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
-  "types": "./index.d.ts",
+  "types": "./dist/esm/index.d.ts",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc",
@@ -15,7 +21,8 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run prettier && npm run lint",
-    "prebuild": "rimraf dist"
+    "prebuild": "rimraf dist",
+    "trace": "tsc --traceResolution"
   },
   "files": [
     "dist",
@@ -35,10 +42,13 @@
   ],
   "author": "ipikuka <talatkuyuk@gmail.com>",
   "license": "MIT",
+  "homepage": "https://github.com/ipikuka/remark-flexible-code-titles#readme",
   "bugs": {
     "url": "https://github.com/ipikuka/remark-flexible-code-titles/issues"
   },
-  "homepage": "https://github.com/ipikuka/remark-flexible-code-titles#readme",
+  "dependencies": {
+    "unist-util-visit": "^4.1.1"
+  },
   "devDependencies": {
     "@types/dedent": "^0.7.0",
     "@types/jest": "^29.2.5",
@@ -63,7 +73,6 @@
     "typescript": "^4.9.4",
     "unified": "^10.1.2",
     "unist": "^8.0.11",
-    "unist-util-visit": "^4.1.1",
     "vfile": "^5.3.6"
   }
 }

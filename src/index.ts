@@ -75,8 +75,7 @@ type T = string | null | undefined;
 
 /**
  *
- * The plugin adds a title element prior to pre>code elements, if the title exists;
- * and wraps the pre>code elements and the title element in a container.
+ * This plugin adds a title element before the code element, if the title exists in the markdown code block, and wraps them in a container.
  *
  * for example:
  * ```javascript:title.js
