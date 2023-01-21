@@ -8,9 +8,9 @@
     "esModuleInterop": true,
     "importHelpers": true,
     "strict": true,
+    "declaration": true,
     "sourceMap": true,
     "noImplicitReturns": true,
-    "rootDir": "src",
     "outDir": "dist/esm",
     "types": ["node", "jest"]
   }
