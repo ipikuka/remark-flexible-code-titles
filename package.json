@@ -1,6 +1,6 @@
 {
   "name": "remark-flexible-code-titles",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Remark parser plugin to add titles into code blocks in a flexible way",
   "type": "module",
   "exports": {
@@ -21,8 +21,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run prettier && npm run lint",
-    "prebuild": "rimraf dist",
-    "trace": "tsc --traceResolution"
+    "prebuild": "rimraf dist"
   },
   "files": [
     "dist",
@@ -38,7 +37,7 @@
     "remark",
     "remark-plugin",
     "markdown",
-    "code-titles"
+    "remark-code-titles"
   ],
   "author": "ipikuka <talatkuyuk@gmail.com>",
   "license": "MIT",

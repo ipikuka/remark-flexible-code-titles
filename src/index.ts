@@ -1,8 +1,7 @@
 import { visit, type Visitor } from "unist-util-visit";
 import type { Plugin, Transformer } from "unified";
-import type { Node, Parent } from "unist";
+import type { Node, Parent, Data } from "unist";
 import type { Paragraph, Code } from "mdast";
-import type { Data } from "vfile";
 
 export interface CodeTitleOptions {
   /**
@@ -278,25 +277,19 @@ export const plugin: Plugin<[CodeTitleOptions?]> = (
   const visitor: Visitor = (node, index, parent) => {
     if (!isCodeNode(node)) return;
 
-    console.log({
-      type: node.type,
-      lang: node.lang,
-      meta: node.meta,
-      parent: parent?.type,
-    });
+    // console.log({
+    //   lang: node.lang,
+    //   meta: node.meta,
+    // });
 
     const { title, language, meta } = extractLanguageAndTitle(node);
 
-    console.log({ title, language, meta });
+    // console.log({ title, language, meta });
 
     // mutating the parent.children may effect the next iteration causing visit the same node "code"
     // so, it is important to normalize the language here, otherwise may cause infinite loop
     node.lang = language;
     node.meta = meta;
-
-    // if (!title) {
-    //   return;
-    // }
 
     let titleNode: Paragraph | undefined = undefined;
     let containerNode: Parent | undefined = undefined;
