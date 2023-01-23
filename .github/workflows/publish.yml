@@ -11,6 +11,9 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16, 18]
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
@@ -18,16 +21,16 @@ jobs:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         uses: actions/checkout@v3
 
-      - name: Setup Node
+      - name: Setup Node ${{ matrix.node-version }}
         # Setup node environment
         uses: actions/setup-node@v3
         with:
           # Node version. Run "node -v" to check the latest version
-          node-version: 16.x
+          node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
-        run: npm && npm install
+        run: npm install
 
       - name: Build
         run: npm run build
