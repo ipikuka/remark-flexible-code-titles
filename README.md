@@ -14,7 +14,7 @@ So, It is summarized the uses of this plugin;
 
 - This plugin can add `title node` above the `code node`, providing _custom tag, custom class name and also additional properties_.
 - This plugin can add `container node` for the `code node`, providing _custom tag, custom class name and also additional properties_.
-- This plugin can add both `title node` and `container node` which contains the `title node` and the `code node`.
+- This plugin can add both `title node` and `container node` which contains the `title` and the `code`.
 - This plugin corrects the syntax of code highligting properties (which the other plugins provide, like [rehype-prism-plus][rehypeprismplus]) if no language provided for the code blocks.
 
 ## Installation
@@ -27,7 +27,7 @@ npm install remark-flexible-code-titles
 
 ## Usage
 
-Say we have the following file, `example.md`, which consists a code block. The code block's language is "javascript" and its title is "file.js" specified after _a colon_ `:`
+Say we have the following file, `example.md`, which consists a code block. The code block's language is "javascript" and its title is "file.js" specified  _after a colon_ `:`
 
 ````markdown
 ```javascript:file.js
@@ -77,6 +77,14 @@ Without `remark-flexible-code-titles`, you’d get:
   <code class="language-javascript:file.js">let me = "ipikuka";</code>
 </pre>
 ```
+
+You can use the `remark-flexible-code-titles` plugin **without language**, _setting the title just after a colon_ `:`
+
+````markdown
+```:title
+This is a pseudo code line.
+```
+````
 
 ## Options
 
@@ -243,7 +251,7 @@ The job the `remark-flexible-code-titles` handles apart from providing code titl
 <code class="code-highlight">...highlighted and numbered lines...</code>
 ```
 
-Further, you can provide the `code title` without any language just after a colon `:`, as well.
+You can provide the `title` without any language just after a colon `:`
 
 ````markdown
 ```:title
@@ -251,15 +259,17 @@ lines...
 ```
 ````
 
-Further and further, even if, there is no space between the _title_ and the _line range string_, or giving any extra spaces inside the _line range string_ around the dash `-`, this plugin can handles this kind of **mis-typed situations**.
+Further, even if there is no space between the _title_ and the _line range string_, or giving any extra spaces inside the _line range string_ around the dash `-`, the `remark-flexible-code-titles` can handles this kind of **mis-typed situations**.
 
 ````markdown
 ```:title{ 1, 3 - 6 }
-lines...
+normally there should be one space between parts `language:title` and `{_line range string inside curly braces_}`
+if there are spaces around the dash, the lines is not going to be highlighted
+`remark-flexible-code-titles` solves this kind of mis-typed situations
 ```
 ````
 
-With no problem, the `remark-flexible-code-titles` with default options ensures to produce the following `mdast` and `html` for the above `markdown code block`:  
+With no problem, even if there is mis-typed syntax, the `remark-flexible-code-titles` with default options ensures to produce the following `mdast` and `html` for the above `markdown code block`:  
 
 ```json
 {
