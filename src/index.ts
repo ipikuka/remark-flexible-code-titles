@@ -67,7 +67,7 @@ const DEFAULT_SETTINGS: CodeTitleOptions = {
 };
 
 const isCodeNode = (node: Node): node is Code => {
-  return "lang" in node && node.type === "code";
+  return "value" in node && "lang" in node && node.type === "code";
 };
 
 type T = string | null | undefined;
@@ -276,11 +276,6 @@ export const plugin: Plugin<[CodeTitleOptions?]> = (
 
   const visitor: Visitor = (node, index, parent) => {
     if (!isCodeNode(node)) return;
-
-    // console.log({
-    //   lang: node.lang,
-    //   meta: node.meta,
-    // });
 
     const { title, language, meta } = extractLanguageAndTitle(node);
 
