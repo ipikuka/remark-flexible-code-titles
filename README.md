@@ -1,5 +1,10 @@
 # remark-flexible-code-titles
 
+[![NPM version][npm-image]][npm-url]
+[![Build][github-build]][github-build-url]
+![npm-typescript]
+[![License][github-license]][github-license-url]
+
 This package is a [unified][unified] ([remark][remark]) plugin to add code titles in a flexible way (compatible with new parser "[micromark][micromark]").
 
 "**unified**" is a project that transforms content with abstract syntax trees (ASTs). "**remark**" adds support for markdown to unified. "**mdast**" is the markdown abstract syntax tree (AST) that remark uses.
@@ -23,6 +28,12 @@ This package is suitable for ESM and CommonJs module system. In Node.js (version
 
 ```bash
 npm install remark-flexible-code-titles
+```
+
+or
+
+```bash
+yarn add remark-flexible-code-titles
 ```
 
 ## Usage
@@ -330,3 +341,10 @@ Use of `remark-flexible-code-titles` does not involve rehype (hast) or user cont
 [license]: https://github.com/ipikuka/remark-flexible-code-titles/blob/main/LICENSE
 [markdownnpm]: https://www.npmjs.com/search?q=keywords:markdown
 [remarkcodetitlesnpm]: https://www.npmjs.com/search?q=keywords:remark%20code%20titles
+[npm-url]: https://www.npmjs.com/package/remark-flexible-code-titles
+[npm-image]: https://img.shields.io/npm/v/remark-flexible-code-titles
+[github-license]: https://img.shields.io/github/license/ipikuka/remark-flexible-code-titles
+[github-license-url]: https://github.com/ipikuka/remark-flexible-code-titles/blob/master/LICENSE
+[github-build]: https://github.com/ipikuka/remark-flexible-code-titles/actions/workflows/publish.yml/badge.svg
+[github-build-url]: https://github.com/ipikuka/remark-flexible-code-titles/actions/workflows/publish.yml
+[npm-typescript]: https://img.shields.io/npm/types/remark-flexible-code-titles
