@@ -120,11 +120,11 @@ It is a **boolean** option for not adding any `title node`. If the option is pro
 
 #### `titleTagName`
 
-It is a **string** option for providing a custom HTML tag name for the `title node` other than `div`.
+It is a **string** option for providing custom HTML tag name for the `title node` other than `div`.
 
 #### `titleClassName`
 
-It is a **string** option for providing a custom className other than `remark-code-title` for the `title node`.
+It is a **string** option for providing custom className for the `title node` other than `remark-code-title` .
 
 #### `titleProperties`
 
@@ -136,11 +136,11 @@ It is a **boolean** option for not adding any `container node`. If the option is
 
 #### `containerTagName`
 
-It is a **string** option for providing a custom HTML tag name for the `container node` other than `div`.
+It is a **string** option for providing custom HTML tag name for the `container node` other than `div`.
 
 #### `containerClassName`
 
-It is a **string** option for providing a custom className other than `remark-code-container` for the `container node`.
+It is a **string** option for providing custom className for the `container node` other than `remark-code-container`.
 
 #### `containerProperties`
 
