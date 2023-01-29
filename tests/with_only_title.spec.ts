@@ -1,6 +1,6 @@
-import { remark } from "remark";
 import type { Processor } from "unified";
 import type { VFileCompatible } from "vfile";
+import { remark } from "remark";
 import gfm from "remark-gfm";
 import remark2rehype from "remark-rehype";
 import stringify from "rehype-stringify";

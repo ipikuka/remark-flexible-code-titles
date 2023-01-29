@@ -3,4 +3,4 @@ dist
 .DS_Store
 
 steps.md
-settings.json
+.vscode
