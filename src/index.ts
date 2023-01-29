@@ -1,7 +1,7 @@
 import { visit, type Visitor } from "unist-util-visit";
 import type { Plugin, Transformer } from "unified";
 import type { Node, Parent, Data } from "unist";
-import type { Paragraph, Code } from "mdast";
+import type { Paragraph, Code, Root } from "mdast";
 
 export interface CodeTitleOptions {
   /**
@@ -66,10 +66,6 @@ const DEFAULT_SETTINGS: CodeTitleOptions = {
   containerProperties: undefined,
 };
 
-const isCodeNode = (node: Node): node is Code => {
-  return "value" in node && "lang" in node && node.type === "code";
-};
-
 type T = string | null | undefined;
 
 /**
@@ -81,9 +77,9 @@ type T = string | null | undefined;
  * // some js code
  * ```
  */
-export const plugin: Plugin<[CodeTitleOptions?]> = (
-  options?: CodeTitleOptions,
-): Transformer => {
+export const plugin: Plugin<[CodeTitleOptions?], Root> = (
+  options,
+): Transformer<Root> => {
   const settings = Object.assign({}, DEFAULT_SETTINGS, options);
 
   /** for creating mdx elements just in case (for archive)
@@ -274,9 +270,7 @@ export const plugin: Plugin<[CodeTitleOptions?]> = (
     return { title, language, meta };
   };
 
-  const visitor: Visitor = (node, index, parent) => {
-    if (!isCodeNode(node)) return;
-
+  const visitor: Visitor<Code> = (node, index, parent) => {
     const { title, language, meta } = extractLanguageAndTitle(node);
 
     // console.log({ title, language, meta });
@@ -310,7 +304,7 @@ export const plugin: Plugin<[CodeTitleOptions?]> = (
     }
   };
 
-  const transformer: Transformer = (tree) => {
+  const transformer: Transformer<Root> = (tree) => {
     visit(tree, "code", visitor);
   };
 
