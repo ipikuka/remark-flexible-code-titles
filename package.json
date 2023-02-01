@@ -1,6 +1,6 @@
 {
   "name": "remark-flexible-code-titles",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Remark plugin to add titles or/and containers for the code blocks with customizable properties",
   "type": "module",
   "exports": {
