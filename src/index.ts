@@ -3,56 +3,19 @@ import type { Plugin, Transformer } from "unified";
 import type { Node, Parent, Data } from "unist";
 import type { Paragraph, Code, Root } from "mdast";
 
+type T = string | null | undefined;
+
+type TPropertyFunction = (language?: string, title?: string) => Record<string, unknown>;
+
 export interface CodeTitleOptions {
-  /**
-   * @defaultValue true
-   */
   title?: boolean;
-
-  /**
-   * @defaultValue "div"
-   */
   titleTagName?: string;
-
-  /**
-   * @defaultValue "remark-code-title"
-   */
   titleClassName?: string;
-
-  /**
-   * @defaultValue undefined
-   */
-  titleProperties?: (
-    language?: string,
-    title?: string,
-  ) => Record<string, unknown>;
-
-  /**
-   * @defaultValue true
-   */
+  titleProperties?: TPropertyFunction;
   container?: boolean;
-
-  /**
-   * @defaultValue "div"
-   */
   containerTagName?: string;
-
-  /**
-   * @defaultValue "remark-code-container"
-   */
   containerClassName?: string;
-
-  /**
-   * @defaultValue undefined
-   */
-
-  /**
-   * @defaultValue undefined
-   */
-  containerProperties?: (
-    language?: string,
-    title?: string,
-  ) => Record<string, unknown>;
+  containerProperties?: TPropertyFunction;
 }
 
 const DEFAULT_SETTINGS: CodeTitleOptions = {
@@ -66,20 +29,17 @@ const DEFAULT_SETTINGS: CodeTitleOptions = {
   containerProperties: undefined,
 };
 
-type T = string | null | undefined;
-
 /**
  *
- * This plugin adds a title element before the code element, if the title exists in the markdown code block, and wraps them in a container.
+ * This plugin adds a title element before the code element, if the title exists in the markdown code block;
+ * and wraps them in a container.
  *
  * for example:
  * ```javascript:title.js
  * // some js code
  * ```
  */
-export const plugin: Plugin<[CodeTitleOptions?], Root> = (
-  options,
-): Transformer<Root> => {
+export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
   const settings = Object.assign({}, DEFAULT_SETTINGS, options);
 
   /** for creating mdx elements just in case (for archive)
@@ -270,7 +230,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (
     return { title, language, meta };
   };
 
-  const visitor: Visitor<Code> = (node, index, parent) => {
+  const visitor: Visitor<Code> = function (node, index, parent) {
     const { title, language, meta } = extractLanguageAndTitle(node);
 
     // console.log({ title, language, meta });
