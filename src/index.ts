@@ -7,7 +7,7 @@ type T = string | null | undefined;
 
 type TPropertyFunction = (language?: string, title?: string) => Record<string, unknown>;
 
-export interface CodeTitleOptions {
+export type CodeTitleOptions = {
   title?: boolean;
   titleTagName?: string;
   titleClassName?: string;
@@ -16,7 +16,7 @@ export interface CodeTitleOptions {
   containerTagName?: string;
   containerClassName?: string;
   containerProperties?: TPropertyFunction;
-}
+};
 
 const DEFAULT_SETTINGS: CodeTitleOptions = {
   title: true,
