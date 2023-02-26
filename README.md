@@ -17,9 +17,9 @@ This plugin is useful if you want to **add title** for the code blocks or **add 
 
 So, It is summarized the uses of this plugin;
 
-- This plugin can add `title node` above the `code node`, providing _custom tag, custom class name and also additional properties_.
-- This plugin can add `container node` for the `code node`, providing _custom tag, custom class name and also additional properties_.
-- This plugin can add both `title node` and `container node` which contains the `title` and the `code`.
+- This plugin can add `title` node above the `code` node, providing _custom tag, custom class name and also additional properties_.
+- This plugin can add `container` node for the `code` node, providing _custom tag, custom class name and also additional properties_.
+- This plugin can add both `title` node and `container` node which contains the `title` and the `code`.
 - This plugin corrects the syntax of code highligting properties (which the other plugins provide, like [rehype-prism-plus][rehypeprismplus]) if no language provided for the code blocks.
 
 ## Installation
@@ -38,7 +38,7 @@ yarn add remark-flexible-code-titles
 
 ## Usage
 
-Say we have the following file, `example.md`, which consists a code block. The code block's language is "javascript" and its title is "file.js" specified  _after a colon_ `:`
+Say we have the following file, `example.md`, which consists a code block. The code block's language is "javascript" and its title is "file.js" specified _after a colon_ `:`
 
 ````markdown
 ```javascript:file.js
@@ -116,35 +116,35 @@ use(remarkCodeTitles, {
 
 #### `title`
 
-It is a **boolean** option for not adding any `title node`. If the option is provided as `false`, the plugin will not add the `title node`. Default is `true`, which adds a `title node` if a title is provided after a colon in the language part of the code block.
+It is a **boolean** option for not adding any `title` node. If the option is provided as `false`, the plugin will not add the `title` node. Default is `true`, which adds a `title` node if a title is provided after a colon in the language part of the code block.
 
 #### `titleTagName`
 
-It is a **string** option for providing custom HTML tag name for the `title node` other than `div`.
+It is a **string** option for providing custom HTML tag name for the `title` node other than `div`.
 
 #### `titleClassName`
 
-It is a **string** option for providing custom className for the `title node` other than `remark-code-title` .
+It is a **string** option for providing custom className for the `title` node other than `remark-code-title` .
 
 #### `titleProperties`
 
-It is an option to set additional properties for the `title node`. It is a callback function that takes the `language` and the `title` as optional arguments and returns the object which is going to be used for adding additional properties into the `title node`.
+It is an option to set additional properties for the `title` node. It is a callback function that takes the `language` and the `title` as optional arguments and returns the object which is going to be used for adding additional properties into the `title` node.
 
 #### `container`
 
-It is a **boolean** option for not adding any `container node`. If the option is provided as `false`, the plugin will not add the `container node`. Default is `true`, which adds a `container node`.
+It is a **boolean** option for not adding any `container` node. If the option is provided as `false`, the plugin will not add the `container` node. Default is `true`, which adds a `container` node.
 
 #### `containerTagName`
 
-It is a **string** option for providing custom HTML tag name for the `container node` other than `div`.
+It is a **string** option for providing custom HTML tag name for the `container` node other than `div`.
 
 #### `containerClassName`
 
-It is a **string** option for providing custom className for the `container node` other than `remark-code-container`.
+It is a **string** option for providing custom className for the `container` node other than `remark-code-container`.
 
 #### `containerProperties`
 
-It is an option to set additional properties for the `container node`. It is a callback function that takes the `language` and the `container` as optional arguments and returns the object which is going to be used for adding additional properties into the `container node`.
+It is an option to set additional properties for the `container` node. It is a callback function that takes the `language` and the `title` as optional arguments and returns the object which is going to be used for adding additional properties into the `container` node.
 
 ## Examples:
 
@@ -280,7 +280,7 @@ if there are spaces around the dash, the lines is not going to be highlighted
 ```
 ````
 
-With no problem, even if there is mis-typed syntax, the `remark-flexible-code-titles` with default options ensures to produce the following `mdast` and `html` for the above `markdown code block`:  
+With no problem, even if there is mis-typed syntax, the `remark-flexible-code-titles` with default options ensures to produce the following `mdast` and `html` for the above `markdown code block`:
 
 ```json
 {
