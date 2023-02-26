@@ -1,12 +1,11 @@
 {
   "include": ["src/**/*"],
   "compilerOptions": {
-    "lib": ["ESNext"],
-    "target": "ESNext",
-    "module": "NodeNext",
+    "lib": ["ES2020"],
+    "target": "ES2020",
+    "module": "Node16",
     "strict": true,
     "declaration": true,
-    "declarationDir": "./dist/types",
     "sourceMap": true,
     "noImplicitReturns": true,
     "outDir": "dist/esm",

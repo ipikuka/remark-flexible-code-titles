@@ -24,7 +24,7 @@ So, It is summarized the uses of this plugin;
 
 ## Installation
 
-This package is suitable for ESM and CommonJs module system. In Node.js (version 12.20+, 14.14+, or 16.0+), install with npm:
+This package is suitable for ESM only. In Node.js (14.14+, or 16.0+), install with npm:
 
 ```bash
 npm install remark-flexible-code-titles
