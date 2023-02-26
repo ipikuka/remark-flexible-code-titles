@@ -1,6 +1,7 @@
-node_modules
-dist
 .DS_Store
-
-steps.md
 .vscode
+dist
+node_modules
+package-lock.json
+archive
+steps.md

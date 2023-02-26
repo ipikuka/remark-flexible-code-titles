@@ -1,0 +1,23 @@
+{
+  "root": true,
+  "extends": ["eslint:recommended", "prettier", "plugin:prettier/recommended"],
+  "plugins": ["@typescript-eslint", "prettier"],
+  "overrides": [
+    {
+      "files": ["**/*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "extends": [
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ],
+  "env": {
+    "node": true
+  }
+}
