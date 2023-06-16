@@ -16,7 +16,8 @@
     "prepublishOnly": "npm test && npm run prettier && npm run lint"
   },
   "files": [
-    "dist",
+    "dist/",
+    "src/",
     "LICENSE",
     "README.md"
   ],
