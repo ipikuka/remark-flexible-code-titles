@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "prettier": "prettier --write .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs",
+    "test:file": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs with_handle_missing_language.spec.ts",
     "prepack": "npm run build",
     "prepublishOnly": "npm test && npm run prettier && npm run lint"
   },

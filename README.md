@@ -111,6 +111,7 @@ use(remarkCodeTitles, {
   containerTagName: string, // optional, default is "div"
   containerClassName: string, // optional, default is "remark-code-container"
   containerProperties: (language?: string, title?: string) => Record<string, unknown>, // optional, default is undefined
+  handleMissingLanguageAs: string, // optional, default is undefined
 })
 ```
 
@@ -145,6 +146,10 @@ It is a **string** option for providing custom className for the `container` nod
 #### `containerProperties`
 
 It is an option to set additional properties for the `container` node. It is a callback function that takes the `language` and the `title` as optional arguments and returns the object which is going to be used for adding additional properties into the `container` node.
+
+#### `handleMissingLanguageAs`
+
+It is a **string** option for providing custom language if the language is missing.
 
 ## Examples:
 
@@ -208,6 +213,30 @@ is going to produce the title `span` element just before the code block, like be
 </span>
 <pre>
   <code class="language-javascript">let me = "ipikuka";</code>
+</pre>
+```
+
+#### Example for handling missing language
+
+````markdown
+```:filename
+It is a line that does not related with any language.
+```
+````
+
+```javascript
+use(remarkCodeTitles, {
+  container: false,
+  handleMissingLanguageAs: "unknown",
+});
+```
+
+is going to produce the title `span` element just before the code block, like below:
+
+```html
+<div class="remark-code-title">filename</div>
+<pre>
+  <code class="language-unknown">It is a line that does not related with any language.</code>
 </pre>
 ```
 

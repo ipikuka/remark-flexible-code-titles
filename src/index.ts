@@ -16,6 +16,7 @@ export type CodeTitleOptions = {
   containerTagName?: string;
   containerClassName?: string;
   containerProperties?: TPropertyFunction;
+  handleMissingLanguageAs?: string;
 };
 
 const DEFAULT_SETTINGS: CodeTitleOptions = {
@@ -27,6 +28,7 @@ const DEFAULT_SETTINGS: CodeTitleOptions = {
   containerTagName: "div",
   containerClassName: "remark-code-container",
   containerProperties: undefined,
+  handleMissingLanguageAs: undefined,
 };
 
 /**
@@ -225,6 +227,14 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
           meta = meta.slice(title.length).trim();
         }
       }
+    }
+
+    if (
+      !language &&
+      options?.handleMissingLanguageAs &&
+      typeof options.handleMissingLanguageAs === "string"
+    ) {
+      language = options.handleMissingLanguageAs;
     }
 
     return { title, language, meta };
