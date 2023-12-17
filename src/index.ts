@@ -1,6 +1,6 @@
 import { visit, type Visitor } from "unist-util-visit";
 import type { Plugin, Transformer } from "unified";
-import type { Node, Parent, Data } from "unist";
+import type { Node, Parent } from "unist";
 import type { Paragraph, Code, Root } from "mdast";
 
 type T = string | null | undefined;
@@ -94,7 +94,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
       data: {
         hName: settings.titleTagName,
         hProperties: {
-          className: [settings.titleClassName],
+          ...(settings.titleClassName && { className: [settings.titleClassName] }),
           ...(properties && { ...properties }),
         },
       },
@@ -102,7 +102,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
   };
 
   const constructContainer = (
-    children: Node<Data>[],
+    children: Node[],
     language: string,
     title: string,
   ): Parent => {

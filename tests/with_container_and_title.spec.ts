@@ -1,14 +1,15 @@
-import { unified, type Processor } from "unified";
+import { unified } from "unified";
 import remarkParse from "remark-parse";
 import gfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import dedent from "dedent";
+// import dedent from "../node_modules/dedent/dist/dedent.mjs";
 import type { VFileCompatible } from "vfile";
 
 import plugin from "../src/index";
 
-const compiler: Processor = unified()
+const compiler = unified()
   .use(remarkParse)
   .use(gfm)
   .use(plugin)
