@@ -4,7 +4,6 @@ import gfm from "remark-gfm";
 import remarkRehype from "remark-rehype";
 import rehypeStringify from "rehype-stringify";
 import dedent from "dedent";
-// import dedent from "../node_modules/dedent/dist/dedent.mjs";
 import type { VFileCompatible } from "vfile";
 
 import plugin from "../src/index";
