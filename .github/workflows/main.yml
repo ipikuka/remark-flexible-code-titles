@@ -21,3 +21,12 @@ jobs:
       - run: npm ci
       - run: npm run format
       - run: npm test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ./coverage/
+          files: ./coverage-final.json
+          fail_ci_if_error: true
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: ipikuka/remark-flexible-code-titles

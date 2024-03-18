@@ -4,6 +4,8 @@
 [![Build][github-build]][github-build-url]
 ![npm-typescript]
 [![License][github-license]][github-license-url]
+[![codecov](https://codecov.io/gh/ipikuka/remark-flexible-code-titles/graph/badge.svg?token=LJKU8SQ935)](https://codecov.io/gh/ipikuka/remark-flexible-code-titles)
+[![type-coverage](https://img.shields.io/badge/dynamic/json.svg?label=type-coverage&prefix=%E2%89%A5&suffix=%&query=$.typeCoverage.atLeast&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fipikuka%2Fremark-flexible-code-titles%2Fmaster%2Fpackage.json)](https://github.com/ipikuka/remark-flexible-code-titles)
 
 This package is a [unified][unified] ([remark][remark]) plugin to add code titles in a flexible way (compatible with new parser "[micromark][micromark]").
 
