@@ -11,7 +11,7 @@
     "format": "npm run prettier && npm run lint",
     "prettier": "prettier --write .",
     "lint": "eslint .",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs --coverage",
     "test:file": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs with_container_and_title.spec.ts",
     "prepack": "npm run build",
     "prepublishOnly": "npm test && npm run format"
