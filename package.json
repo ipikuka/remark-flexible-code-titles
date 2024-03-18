@@ -7,14 +7,14 @@
   "main": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "scripts": {
-    "prebuild": "rimraf dist",
-    "build": "npm run prebuild && tsc",
-    "lint": "eslint .",
+    "build": "rimraf dist && tsc --build && type-coverage",
+    "format": "npm run prettier && npm run lint",
     "prettier": "prettier --write .",
+    "lint": "eslint .",
     "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs",
     "test:file": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs with_container_and_title.spec.ts",
     "prepack": "npm run build",
-    "prepublishOnly": "npm test && npm run prettier && npm run lint"
+    "prepublishOnly": "npm test && npm run format"
   },
   "files": [
     "dist/",
@@ -64,6 +64,7 @@
     "remark-rehype": "^11.1.0",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
+    "type-coverage": "^2.27.1",
     "typescript": "^5.4.2",
     "unified": "^11.0.4",
     "vfile": "^6.0.1"
@@ -72,5 +73,13 @@
     "@types/mdast": "^4.0.3",
     "unist-util-visit": "^5.0.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "typeCoverage": {
+    "atLeast": 100,
+    "detail": true,
+    "ignoreAsAssertion": true,
+    "ignoreNonNullAssertion": true,
+    "ignoreCatch": true,
+    "strict": true
+  }
 }
