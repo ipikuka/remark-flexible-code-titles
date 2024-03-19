@@ -1,25 +1,23 @@
-import { unified } from "unified";
-import remarkParse from "remark-parse";
-import gfm from "remark-gfm";
-import remarkRehype from "remark-rehype";
-import rehypeStringify from "rehype-stringify";
 import dedent from "dedent";
-import type { VFileCompatible } from "vfile";
 
-import plugin from "../src/index";
-
-const compiler = unified()
-  .use(remarkParse)
-  .use(gfm)
-  .use(plugin)
-  .use(remarkRehype)
-  .use(rehypeStringify);
-
-const process = async (contents: VFileCompatible): Promise<VFileCompatible> => {
-  return compiler.process(contents).then((file) => file.value);
-};
+import { process } from "./util/index";
 
 describe("remark-flexible-code-title, no options, meaningly with container and title by default", () => {
+  // ******************************************
+  it("Considers code in paragraph", async () => {
+    const input = dedent`
+      \`Hi\`
+    `;
+
+    // { type: 'code', value: "Hi", parent: 'root' }
+
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <p><code>Hi</code></p>
+      "
+    `);
+  });
+
   // ******************************************
   it("Considers there is no language or title", async () => {
     const input = dedent`
@@ -30,12 +28,14 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
 
     // { type: 'code', lang: null, meta: null, parent: 'root' }
 
-    const expected = dedent`
-      <div class="remark-code-container"><pre><code>const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <pre><code>const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -48,12 +48,14 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
 
     // { type: 'code', lang: ':', meta: null, parent: 'root' }  ==>> make the lang null
 
-    const expected = dedent`
-      <div class="remark-code-container"><pre><code>const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <pre><code>const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -66,12 +68,14 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
 
     // { type: 'code', lang: 'js', meta: null, parent: 'root' }
 
-    const expected = dedent`
-      <div class="remark-code-container"><pre><code class="language-js">const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <pre><code class="language-js">const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -84,12 +88,14 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
 
     // { type: 'code', lang: 'js:', meta: null, parent: 'root' } ==>> delete the colon in the lang
 
-    const expected = dedent`
-      <div class="remark-code-container"><pre><code class="language-js">const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <pre><code class="language-js">const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -104,12 +110,15 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
     // { type: 'code', lang: ':title.js', meta: null, parent: 'root' } first visit
     // { type: 'code', lang: '', meta: null, parent: 'root' } second visit ==>> see the lang: null
 
-    const expected = dedent`
-      <div class="remark-code-container"><div class="remark-code-title">title.js</div><pre><code>const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <div class="remark-code-title">title.js</div>
+        <pre><code>const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -123,12 +132,15 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
     // little complex logic; meta starts with the colon, so remove the first word from meta, if this is not reserved
     // { type: 'code', lang: 'js', meta: ':    title.js   meta', parent: 'root' } ==>> little complex logic; remove title from meta
 
-    const expected = dedent`
-      <div class="remark-code-container"><div class="remark-code-title">title.js</div><pre><code class="language-js">const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <div class="remark-code-title">title.js</div>
+        <pre><code class="language-js">const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -142,12 +154,15 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
     // ==>> nothing to do, there is no title, but remove the colon from the language at the end
     // { type: 'code', lang: 'js:', meta: 'title.js    meta', parent: 'root' }
 
-    const expected = dedent`
-      <div class="remark-code-container"><div class="remark-code-title">title.js</div><pre><code class="language-js">const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <div class="remark-code-title">title.js</div>
+        <pre><code class="language-js">const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -161,12 +176,15 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
     // little complex logic; meta starts with the colon, so remove the first word from meta, if this is not reserved
     // { type: 'code', lang: 'js', meta: ':      title.js    meta', parent: 'root' }
 
-    const expected = dedent`
-      <div class="remark-code-container"><div class="remark-code-title">title.js</div><pre><code class="language-js">const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <div class="remark-code-title">title.js</div>
+        <pre><code class="language-js">const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -180,12 +198,15 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
     // { type: 'code', lang: 'js:title.js', meta: null, parent: 'root' } first visit
     // { type: 'code', lang: 'js', meta: null, parent: 'root' } second visit
 
-    const expected = dedent`
-      <div class="remark-code-container"><div class="remark-code-title">title.js</div><pre><code class="language-js">const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <div class="remark-code-title">title.js</div>
+        <pre><code class="language-js">const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -207,12 +228,14 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
 
     // { title: undefined, language: null, meta: '{2,3-4,5} showLineNumbers' }
 
-    const expected = dedent`
-      <div class="remark-code-container"><pre><code>const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <pre><code>const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -234,12 +257,14 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
 
     // { title: undefined, language: 'ts', meta: '{2,3-4,5} showLineNumbers' }
 
-    const expected = dedent`
-      <div class="remark-code-container"><pre><code class="language-ts">const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <pre><code class="language-ts">const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 
   // ******************************************
@@ -261,11 +286,14 @@ describe("remark-flexible-code-title, no options, meaningly with container and t
 
     // { title: undefined, language: 'typescript', meta: '{2,3-4,5} showLineNumbers' }
 
-    const expected = dedent`
-      <div class="remark-code-container"><div class="remark-code-title">title</div><pre><code class="language-typescript">const a = 1;
-      </code></pre></div>
-    `;
-
-    expect(await process(input)).toBe(expected);
+    expect(await process(input)).toMatchInlineSnapshot(`
+      "
+      <div class="remark-code-container">
+        <div class="remark-code-title">title</div>
+        <pre><code class="language-typescript">const a = 1;
+      </code></pre>
+      </div>
+      "
+    `);
   });
 });
