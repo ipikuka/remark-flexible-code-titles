@@ -19,6 +19,9 @@ const options: CodeTitleOptions = {
     return {
       ["data-language"]: language,
       title,
+      dummy: "", // shouldn't be added
+      empty: [], // shouldn't be added
+      className: undefined, // shouldn't be taken account
     };
   },
   containerTagName: "section",
@@ -27,6 +30,9 @@ const options: CodeTitleOptions = {
     return {
       ["data-language"]: language,
       title,
+      dummy: "", // shouldn't be added
+      empty: [], // shouldn't be added
+      className: undefined, // shouldn't be taken account
     };
   },
 };
