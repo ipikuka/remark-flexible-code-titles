@@ -1,28 +1,32 @@
 # remark-flexible-code-titles
 
-[![NPM version][npm-image]][npm-url]
-[![Build][github-build]][github-build-url]
-![npm-typescript]
+[![NPM version][badge-npm-version]][npm-package-url]
+[![NPM downloads][badge-npm-download]][npm-package-url]
+[![Build][badge-build]][github-workflow-url]
 [![License][github-license]][github-license-url]
 [![codecov](https://codecov.io/gh/ipikuka/remark-flexible-code-titles/graph/badge.svg?token=LJKU8SQ935)](https://codecov.io/gh/ipikuka/remark-flexible-code-titles)
 [![type-coverage](https://img.shields.io/badge/dynamic/json.svg?label=type-coverage&prefix=%E2%89%A5&suffix=%&query=$.typeCoverage.atLeast&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fipikuka%2Fremark-flexible-code-titles%2Fmaster%2Fpackage.json)](https://github.com/ipikuka/remark-flexible-code-titles)
+[![typescript][badge-typescript]][typescript-url]
+[![License][badge-license]][github-license-url]
 
-This package is a [unified][unified] ([remark][remark]) plugin to add code titles in a flexible way (compatible with new parser "[micromark][micromark]").
+This package is a [unified][unified] ([remark][remark]) plugin to add title or/and container for the code block with customizable properties in markdown.
 
-"**unified**" is a project that transforms content with abstract syntax trees (ASTs). "**remark**" adds support for markdown to unified. "**mdast**" is the markdown abstract syntax tree (AST) that remark uses.
+**[unified][unified]** is a project that transforms content with abstract syntax trees (ASTs) using the new parser **[micromark][micromark]**. **[remark][remark]** adds support for markdown to unified. **[mdast][mdast]** is the Markdown Abstract Syntax Tree (AST) which is a specification for representing markdown in a syntax tree.
 
 **This plugin is a remark plugin that transforms the mdast.**
 
 ## When should I use this?
 
-This plugin is useful if you want to **add title** for the code blocks or **add container** for the code blocks or **both**. It is also usefull if you don't add a title or a container since it also **corrects the syntax of code highligting properties if no language provided**.
+This plugin is useful if you want to **add title and container or any of two** for code blocks in markdown. 
 
-So, It is summarized the uses of this plugin;
+The plugin `remark-flexible-code-titles` can:
 
-- This plugin can add `title` node above the `code` node, providing _custom tag, custom class name and also additional properties_.
-- This plugin can add `container` node for the `code` node, providing _custom tag, custom class name and also additional properties_.
-- This plugin can add both `title` node and `container` node which contains the `title` and the `code`.
-- This plugin corrects the syntax of code highligting properties (which the other plugins provide, like [rehype-prism-plus][rehypeprismplus]) if no language provided for the code blocks.
+- add `title` node above the `code` node, providing _custom tag name, custom class name and also additional properties_.
+- add `container` node for the `code` node, providing _custom tag name, custom class name and also additional properties_.
+- correct the syntax of code highligting directives on behalf of related rhype plugins (like [rehype-prism-plus][rehypeprismplus])
+- handle the titles even if no language provided,
+- handle the titles composed by more than one word (handle spaces in the title),
+- support a fallback language as an option if the language is missing.
 
 ## Installation
 
@@ -44,7 +48,7 @@ Say we have the following file, `example.md`, which consists a code block. The c
 
 ````markdown
 ```javascript:file.js
-let me = "ipikuka";
+/* code block */
 ```
 ````
 
@@ -77,9 +81,7 @@ Now, running `node example.js` yields:
 ```html
 <div class="remark-code-container">
   <div class="remark-code-title">title.js</div>
-  <pre>
-    <code class="language-javascript">let me = "ipikuka";</code>
-  </pre>
+  <!-- <pre><code> elements -->
 </div>
 ```
 
@@ -87,15 +89,15 @@ Without `remark-flexible-code-titles`, you’d get:
 
 ```html
 <pre>
-  <code class="language-javascript:file.js">let me = "ipikuka";</code>
+   <code class="language-javascript:file.js"><!-- code block --></code> 
 </pre>
 ```
 
-You can use the `remark-flexible-code-titles` plugin **without language**, _setting the title just after a colon_ `:`
+You can use the `remark-flexible-code-titles` plugin **without a language**, _setting the title just after a colon_ **`:`**
 
 ````markdown
 ```:title
-This is a pseudo code line.
+This is a line of pseudo code.
 ```
 ````
 
@@ -152,6 +154,10 @@ It is an option to set additional properties for the `container` node. It is a c
 #### `handleMissingLanguageAs`
 
 It is a **string** option for providing custom language if the language is missing.
+
+#### `tokenForSpaceInTitle`
+
+It is a **string** option for making the title up with more than one word.
 
 ## Examples:
 
@@ -333,7 +339,7 @@ With no problem, even if there is mis-typed syntax, the `remark-flexible-code-ti
 
 ### Another flexible usage:
 
-You can use this plugin without providing _no title_, _no container_ with the options `{title: false, container: false}` just for only correcting the _line range strings_ and using this kind of parameters **if no language provided in markdown**. Hey, that is the flexibility this plugin's name comes from :).
+You can use this plugin without providing _no title_, _no container_ with the options `{title: false, container: false}` just for only correcting the _line range strings_ and using this kind of parameters **if no language provided in markdown**. Hey, that is the flexibility this plugin's name comes from.
 
 ## Syntax tree
 
@@ -341,56 +347,81 @@ This plugin only modifies the mdast (markdown abstract syntax tree) as explained
 
 ## Types
 
-This package is fully typed with [TypeScript][typeScript]. The plugin options' type is exported as `CodeTitleOptions`.
+This package is fully typed with [TypeScript][typescript]. The plugin options' type is exported as `CodeTitleOptions`.
 
 ## Compatibility
 
-This plugin works with unified version 6+ and remark version 7+. It is compatible with mdx version.2.
+This plugin works with `unified` version 6+ and `remark` version 7+. It is compatible with `mdx` version 2+.
 
 ## Security
 
 Use of `remark-flexible-code-titles` does not involve rehype (hast) or user content so there are no openings for cross-site scripting (XSS) attacks.
 
-## My Remark Plugins
+## My Plugins
 
-The remark packages I have published are presented below:
+I like to contribute the Unified / Remark / MDX ecosystem, so I recommend you to have a look my plugins.
+
+### My Remark Plugins
 
 - [`remark-flexible-code-titles`](https://www.npmjs.com/package/remark-flexible-code-titles)
   – Remark plugin to add titles or/and containers for the code blocks with customizable properties
 - [`remark-flexible-containers`](https://www.npmjs.com/package/remark-flexible-containers)
   – Remark plugin to add custom containers with customizable properties in markdown
+- [`remark-ins`](https://www.npmjs.com/package/remark-ins)
+  – Remark plugin to add `ins` element in markdown
 - [`remark-flexible-paragraphs`](https://www.npmjs.com/package/remark-flexible-paragraphs)
   – Remark plugin to add custom paragraphs with customizable properties in markdown
 - [`remark-flexible-markers`](https://www.npmjs.com/package/remark-flexible-markers)
   – Remark plugin to add custom `mark` element with customizable properties in markdown
-- [`remark-ins`](https://www.npmjs.com/package/remark-ins)
-  – Remark plugin to add `ins` element in markdown
+- [`remark-flexible-toc`](https://www.npmjs.com/package/remark-flexible-toc)
+  – Remark plugin to expose the table of contents via Vfile.data or via an option reference
+- [`remark-mdx-remove-esm`](https://www.npmjs.com/package/remark-mdx-remove-esm)
+  – Remark plugin to remove import and/or export statements (mdxjsEsm)
+
+### My Rehype Plugins
+
+- [`rehype-pre-language`](https://www.npmjs.com/package/rehype-pre-language)
+  – Rehype plugin to add language information as a property to `pre` element
+
+### My Recma Plugins
+
+- [`recma-mdx-escape-missing-components`](https://www.npmjs.com/package/recma-mdx-escape-missing-components)
+  – Recma plugin to set the default value `() => null` for the Components in MDX in case of missing or not provided so as not to throw an error
+- [`recma-mdx-change-props`](https://www.npmjs.com/package/recma-mdx-change-props)
+  – Recma plugin to change the `props` parameter into the `_props` in the `function _createMdxContent(props) {/* */}` in the compiled source in order to be able to use `{props.foo}` like expressions. It is useful for the `next-mdx-remote` or `next-mdx-remote-client` users in `nextjs` applications.
 
 ## License
 
-[MIT][license] © ipikuka
+[MIT License](./LICENSE) © ipikuka
 
 ### Keywords
 
-[unified][unifiednpm] [remark][remarknpm] [remark-plugin][remarkpluginnpm] [mdast][mdastnpm] [markdown][markdownnpm] [remark code titles][remarkcodetitlesnpm]
+🟩 [unified][unifiednpm] 🟩 [remark][remarknpm] 🟩 [remark plugin][remarkpluginnpm] 🟩 [mdast][mdastnpm] 🟩 [markdown][markdownnpm] 🟩 [remark code titles][remarkcodetitlesnpm]
 
-[unified]: https://github.com/unifiedjs/unified
 [unifiednpm]: https://www.npmjs.com/search?q=keywords:unified
-[remark]: https://github.com/remarkjs/remark
 [remarknpm]: https://www.npmjs.com/search?q=keywords:remark
 [remarkpluginnpm]: https://www.npmjs.com/search?q=keywords:remark%20plugin
-[mdast]: https://github.com/syntax-tree/mdast
 [mdastnpm]: https://www.npmjs.com/search?q=keywords:mdast
-[micromark]: https://github.com/micromark/micromark
-[rehypeprismplus]: https://github.com/timlrx/rehype-prism-plus
-[typescript]: https://www.typescriptlang.org/
-[license]: https://github.com/ipikuka/remark-flexible-code-titles/blob/main/LICENSE
 [markdownnpm]: https://www.npmjs.com/search?q=keywords:markdown
 [remarkcodetitlesnpm]: https://www.npmjs.com/search?q=keywords:remark%20code%20titles
-[npm-url]: https://www.npmjs.com/package/remark-flexible-code-titles
-[npm-image]: https://img.shields.io/npm/v/remark-flexible-code-titles
-[github-license]: https://img.shields.io/github/license/ipikuka/remark-flexible-code-titles
-[github-license-url]: https://github.com/ipikuka/remark-flexible-code-titles/blob/master/LICENSE
-[github-build]: https://github.com/ipikuka/remark-flexible-code-titles/actions/workflows/publish.yml/badge.svg
-[github-build-url]: https://github.com/ipikuka/remark-flexible-code-titles/actions/workflows/publish.yml
-[npm-typescript]: https://img.shields.io/npm/types/remark-flexible-code-titles
+
+[unified]: https://github.com/unifiedjs/unified
+[remark]: https://github.com/remarkjs/remark
+[remarkplugins]: https://github.com/remarkjs/remark/blob/main/doc/plugins.md
+[mdast]: https://github.com/syntax-tree/mdast
+[micromark]: https://github.com/micromark/micromark
+[typescript]: https://www.typescriptlang.org/
+[rehypeprismplus]: https://github.com/timlrx/rehype-prism-plus
+
+[badge-npm-version]: https://img.shields.io/npm/v/remark-flexible-code-titles
+[badge-npm-download]: https://img.shields.io/npm/dt/remark-flexible-code-titles
+[npm-package-url]: https://www.npmjs.com/package/remark-flexible-code-titles
+
+[badge-license]: https://img.shields.io/github/license/ipikuka/remark-flexible-code-titles
+[github-license-url]: https://github.com/ipikuka/remark-flexible-code-titles/blob/main/LICENSE
+
+[badge-build]: https://github.com/ipikuka/remark-flexible-code-titles/actions/workflows/publish.yml/badge.svg
+[github-workflow-url]: https://github.com/ipikuka/remark-flexible-code-titles/actions/workflows/publish.yml
+
+[badge-typescript]: https://img.shields.io/npm/types/remark-flexible-code-titles
+[typescript-url]: https://www.typescriptlang.org/
