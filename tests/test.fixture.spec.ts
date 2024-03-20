@@ -84,12 +84,17 @@ const fixture = dedent`
   {1,2}showLineNumbers : title
   {1 , 2}showLineNumbers:title
   {1, 2}showLineNumbers :  title
+  js:long@title@with@space{1,2}showLineNumbers
+  js:long@title@with@space {1,2} showLineNumbers
 `;
 
 it("parses the language, title and meta correctly", async () => {
-  const result = fixture
-    .split("\n")
-    .map((input) => ({ _____: input, ...processMDAST("```" + input + "\n```") }));
+  const result = fixture.split("\n").map((input) => ({
+    _____: input,
+    ...processMDAST("```" + input + "\n```", {
+      tokenForSpaceInTitle: "@",
+    }),
+  }));
 
   expect(result).toMatchInlineSnapshot(`
     [
@@ -578,6 +583,18 @@ it("parses the language, title and meta correctly", async () => {
         "_lang": null,
         "_meta": "{1,2} showLineNumbers",
         "title": "title",
+      },
+      {
+        "_____": "js:long@title@with@space{1,2}showLineNumbers",
+        "_lang": "js",
+        "_meta": "{1,2} showLineNumbers",
+        "title": "long title with space",
+      },
+      {
+        "_____": "js:long@title@with@space {1,2} showLineNumbers",
+        "_lang": "js",
+        "_meta": "{1,2} showLineNumbers",
+        "title": "long title with space",
       },
     ]
   `);

@@ -23,6 +23,7 @@ export type CodeTitleOptions = {
   containerClassName?: string;
   containerProperties?: PropertyFunction;
   handleMissingLanguageAs?: string;
+  tokenForSpaceInTitle?: string;
 };
 
 const DEFAULT_SETTINGS: CodeTitleOptions = {
@@ -247,8 +248,12 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
     // remove if there is more spaces in meta
     meta = meta?.replace(/\s+/g, " ").trim() ?? null;
 
+    // employ the settings.tokenForSpaceInTitle
+    if (title && settings.tokenForSpaceInTitle)
+      title = title.replaceAll(settings.tokenForSpaceInTitle, " ");
+
     // if the title is empty, make it null
-    if (title === "") title = null;
+    if (title?.trim() === "") title = null;
 
     // if the language is empty, make it null
     if (language === "") language = null;
