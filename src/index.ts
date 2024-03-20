@@ -3,19 +3,19 @@ import type { Plugin, Transformer } from "unified";
 import type { Node, Parent } from "unist";
 import type { Paragraph, Code, Root } from "mdast";
 
-type T = string | null | undefined;
+type StringOrNull = string | null;
 
-type TPropertyFunction = (language?: string, title?: string) => Record<string, unknown>;
+type PropertyFunction = (language?: string, title?: string) => Record<string, unknown>;
 
 export type CodeTitleOptions = {
   title?: boolean;
   titleTagName?: string;
   titleClassName?: string;
-  titleProperties?: TPropertyFunction;
+  titleProperties?: PropertyFunction;
   container?: boolean;
   containerTagName?: string;
   containerClassName?: string;
-  containerProperties?: TPropertyFunction;
+  containerProperties?: PropertyFunction;
   handleMissingLanguageAs?: string;
 };
 
@@ -134,42 +134,46 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
   const extractLanguageAndTitle = (node: Code) => {
     const { lang: inputLang, meta: inputMeta } = node;
 
-    if (!inputLang && !inputMeta) {
+    if (!inputLang) {
       return { language: null, title: null, meta: null };
     }
 
-    let title: T = undefined;
-    let language: T = inputLang;
-    let meta: T = inputMeta?.replace(/\s+/g, " ").trim(); // remove extra space + trim + remove spaces in the curly braces
+    // we know that "lang" doesn't contain a space (gfm code fencing), but "meta" may consist.
 
-    // correctness for rhypePrismPlus
-    if (
-      inputLang?.startsWith("{") ||
-      inputLang?.toLowerCase().startsWith("showlinenumbers")
-    ) {
-      if (meta?.length) {
-        meta = language + meta;
-      } else {
-        meta = inputLang;
-      }
+    let title: StringOrNull = null;
+    let language: StringOrNull = inputLang;
+    let meta: StringOrNull = inputMeta ?? null;
 
-      language = null;
-      title = null;
+    // move "showLineNumbers" into meta
+    if (/showLineNumbers/.test(language)) {
+      language = language.replace(/showLineNumbers/, "");
+
+      meta = meta?.length ? meta + " showLineNumbers" : "showLineNumbers";
     }
 
-    // another correctness for rhypePrismPlus
-    else if (inputLang?.includes("{")) {
-      const i = inputLang.search("{");
-      const metaPart = inputLang.slice(i, inputLang.length);
-      language = inputLang.slice(0, i);
+    // move line range string like {1, 3-4} into meta (it may complete or nor)
+    if (language?.includes("{")) {
+      const idxStart = language.search("{");
+      const idxEnd = language.search("}");
 
-      if (!language.length) language = null;
+      const metaPart =
+        idxEnd >= 0
+          ? language.substring(idxStart, idxEnd + 1)
+          : language.slice(idxStart, language.length);
 
-      if (meta?.length) {
-        meta = metaPart + meta;
-      } else {
-        meta = metaPart;
-      }
+      language = language.replace(metaPart, "");
+
+      meta = meta?.length ? metaPart + meta : metaPart;
+    }
+
+    // move colon+title into meta
+    if (language?.includes(":")) {
+      const idx = language.search(":");
+      const metaPart = language.slice(idx, language.length);
+
+      language = language.slice(0, idx);
+
+      meta = meta?.length ? metaPart + " " + meta : metaPart;
     }
 
     // another correctness for line ranges, removing all spaces within curly braces
@@ -180,55 +184,29 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
       });
     }
 
-    // after correctness
-    const _inputLang = language;
+    // correct if there is a non-space character before opening curly brace "{"
+    meta = meta?.replace(/(?<=\S)\{/, " {") ?? null;
 
-    if (_inputLang?.includes(":")) {
-      language = _inputLang.slice(0, _inputLang.search(":"));
+    // correct if there is a non-space character after closing curly brace "}"
+    meta = meta?.replace(/\}(?=\S)/, "} ") ?? null;
 
-      if (!language.length) language = null;
+    if (meta?.includes(":")) {
+      var regex = /:\s*.*?(?=[\s\{]|$)/; // to find :title with colon
+      var match = meta?.match(regex);
 
-      title = _inputLang.slice(_inputLang.search(":") + 1, _inputLang.length);
-
-      if (!title.length && !meta?.length) {
-        title = null;
-        meta = null;
-      } else if (!title.length && meta?.length) {
-        const _meta = meta;
-        const firstWord = _meta.replace(/ .*/, "");
-
-        if (
-          firstWord.startsWith("{") ||
-          firstWord.toLowerCase().startsWith("showlinenumbers")
-        ) {
+      if (match) {
+        const matched = match[0];
+        title = matched.replace(/:\s*/, "");
+        if (/^showLineNumbers$/i.test(title)) {
           title = null;
+          meta = meta.replace(/:\s*/, "");
         } else {
-          title = firstWord;
-          meta = meta.slice(title.length).trim();
-        }
-      }
-    } else if (meta?.startsWith(":")) {
-      meta = meta.slice(1).trim();
-
-      if (!meta.length) {
-        title = null;
-        meta = null;
-      } else {
-        const _meta = meta;
-        const firstWord = _meta.replace(/ .*/, "");
-
-        if (
-          firstWord.startsWith("{") ||
-          firstWord.toLowerCase().startsWith("showlinenumbers")
-        ) {
-          title = null;
-        } else {
-          title = firstWord;
-          meta = meta.slice(title.length).trim();
+          meta = meta.replace(matched, "").trim();
         }
       }
     }
 
+    // handle missing language
     if (
       !language &&
       options?.handleMissingLanguageAs &&
@@ -237,13 +215,23 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
       language = options.handleMissingLanguageAs;
     }
 
+    // remove if there is more spaces
+    meta = meta?.replace(/\s+/g, " ").trim() ?? null;
+
+    // if the meta is empty, make it null
+    if (title === "") title = null;
+
+    // if the language is empty, make it null
+    if (language === "") language = null;
+
+    // if the meta is empty, make it null
+    if (meta === "") meta = null;
+
     return { title, language, meta };
   };
 
   const visitor: Visitor<Code> = function (node, index, parent) {
     const { title, language, meta } = extractLanguageAndTitle(node);
-
-    // console.log({ title, language, meta });
 
     // mutating the parent.children may effect the next iteration causing visit the same node "code"
     // so, it is important to normalize the language here, otherwise may cause infinite loop
@@ -254,7 +242,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
     let containerNode: Parent | undefined = undefined;
 
     if (settings.title && title) {
-      titleNode = constructTitle(language ?? "", title ?? "");
+      titleNode = constructTitle(language ?? "", title);
     }
 
     if (settings.container) {

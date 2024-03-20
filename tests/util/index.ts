@@ -42,8 +42,8 @@ export const processMDAST = (
 ):
   | {
       title: string | null;
-      lang: string | null | undefined;
-      meta: string | null | undefined;
+      _lang: string | null | undefined;
+      _meta: string | null | undefined;
     }
   | undefined => {
   const tree = fromMarkdown(content, {
@@ -62,11 +62,11 @@ export const processMDAST = (
 
   if (!code_) return;
 
-  const lang = code_.lang;
-  const meta = code_.meta;
+  const _lang = code_.lang;
+  const _meta = code_.meta;
 
   const titleNode = find<Paragraph>(tree, { type: "paragraph" })?.children[0];
   const title = titleNode ? (titleNode as Text).value : null;
 
-  return { title, lang, meta };
+  return { title, _lang, _meta };
 };

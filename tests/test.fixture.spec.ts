@@ -515,7 +515,7 @@ it("parses the language, title and meta correctly", async () => {
       },
       {
         "_____": "showLineNumbers {1 , 2 }",
-        "_lang": "",
+        "_lang": null,
         "_meta": "{1,2} showLineNumbers",
         "title": null,
       },
@@ -545,13 +545,13 @@ it("parses the language, title and meta correctly", async () => {
       },
       {
         "_____": "showLineNumbers {1 , 2 }:title",
-        "_lang": "",
+        "_lang": null,
         "_meta": "{1,2} showLineNumbers",
         "title": "title",
       },
       {
         "_____": "showLineNumbers {1 , 2 } :title",
-        "_lang": "",
+        "_lang": null,
         "_meta": "{1,2} showLineNumbers",
         "title": "title",
       },
