@@ -1,13 +1,39 @@
 import { visit, type Visitor } from "unist-util-visit";
 import type { Plugin, Transformer } from "unified";
-import type { Node, Parent } from "unist";
-import type { Paragraph, Code, Root } from "mdast";
+import type { Paragraph, Code, Root, Data, BlockContent, Parent } from "mdast";
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+
+interface ContainerData extends Data {}
+
+interface Container extends Parent {
+  /**
+   * Node type of mdast Mark.
+   */
+  type: "container";
+  /**
+   * Children of paragraph.
+   */
+  children: BlockContent[];
+  /**
+   * Data associated with the mdast paragraph.
+   */
+  data?: ContainerData | undefined;
+}
+
+declare module "mdast" {
+  interface BlockContentMap {
+    container: Container;
+  }
+
+  interface RootContentMap {
+    container: Container;
+  }
+}
 
 type StringOrNull = string | null;
 
@@ -127,10 +153,10 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
   };
 
   const constructContainer = (
-    children: Node[],
+    children: BlockContent[],
     language: string,
     title: string,
-  ): Parent => {
+  ): Container => {
     let properties: Record<string, unknown> | undefined;
 
     if (settings.containerProperties) {
@@ -276,7 +302,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
     node.meta = meta;
 
     let titleNode: Paragraph | undefined = undefined;
-    let containerNode: Parent | undefined = undefined;
+    let containerNode: Container | undefined = undefined;
 
     if (settings.title && title) {
       titleNode = constructTitle(language ?? "", title);
