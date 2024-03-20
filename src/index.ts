@@ -3,6 +3,12 @@ import type { Plugin, Transformer } from "unified";
 import type { Node, Parent } from "unist";
 import type { Paragraph, Code, Root } from "mdast";
 
+// eslint-disable-next-line @typescript-eslint/ban-types
+type Prettify<T> = { [K in keyof T]: T[K] } & {};
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
+
 type StringOrNull = string | null;
 
 type PropertyFunction = (language?: string, title?: string) => Record<string, unknown>;
@@ -23,13 +29,22 @@ const DEFAULT_SETTINGS: CodeTitleOptions = {
   title: true,
   titleTagName: "div",
   titleClassName: "remark-code-title",
-  titleProperties: undefined,
   container: true,
   containerTagName: "div",
   containerClassName: "remark-code-container",
-  containerProperties: undefined,
-  handleMissingLanguageAs: undefined,
 };
+
+type PartiallyRequiredCodeTitleOptions = Prettify<
+  PartiallyRequired<
+    CodeTitleOptions,
+    | "title"
+    | "titleTagName"
+    | "titleClassName"
+    | "container"
+    | "containerTagName"
+    | "containerClassName"
+  >
+>;
 
 /**
  *
@@ -42,7 +57,11 @@ const DEFAULT_SETTINGS: CodeTitleOptions = {
  * ```
  */
 export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
-  const settings = Object.assign({}, DEFAULT_SETTINGS, options);
+  const settings = Object.assign(
+    {},
+    DEFAULT_SETTINGS,
+    options,
+  ) as PartiallyRequiredCodeTitleOptions;
 
   /** for creating mdx elements just in case (for archive)
   const titleNode = {
@@ -82,9 +101,14 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
       properties = settings.titleProperties(language, title);
 
       Object.entries(properties).forEach(([k, v]) => {
-        if (typeof v === "string" && !v.length) {
+        if (
+          (typeof v === "string" && v === "") ||
+          (Array.isArray(v) && (v as unknown[]).length === 0)
+        ) {
           properties && (properties[k] = undefined);
         }
+
+        if (k === "className") delete properties?.["className"];
       });
     }
 
@@ -94,7 +118,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
       data: {
         hName: settings.titleTagName,
         hProperties: {
-          ...(settings.titleClassName && { className: [settings.titleClassName] }),
+          className: [settings.titleClassName],
           ...(properties && { ...properties }),
         },
       },
@@ -112,9 +136,14 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
       properties = settings.containerProperties(language, title);
 
       Object.entries(properties).forEach(([k, v]) => {
-        if (typeof v === "string" && !v.length) {
+        if (
+          (typeof v === "string" && v === "") ||
+          (Array.isArray(v) && (v as unknown[]).length === 0)
+        ) {
           properties && (properties[k] = undefined);
         }
+
+        if (k === "className") delete properties?.["className"];
       });
     }
 
@@ -152,7 +181,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
     }
 
     // move line range string like {1, 3-4} into meta (it may complete or nor)
-    if (language?.includes("{")) {
+    if (language.includes("{")) {
       const idxStart = language.search("{");
       const idxEnd = language.search("}");
 
@@ -167,7 +196,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
     }
 
     // move colon+title into meta
-    if (language?.includes(":")) {
+    if (language.includes(":")) {
       const idx = language.search(":");
       const metaPart = language.slice(idx, language.length);
 
@@ -191,8 +220,8 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
     meta = meta?.replace(/\}(?=\S)/, "} ") ?? null;
 
     if (meta?.includes(":")) {
-      var regex = /:\s*.*?(?=[\s\{]|$)/; // to find :title with colon
-      var match = meta?.match(regex);
+      const regex = /:\s*.*?(?=[\s{]|$)/; // to find :title with colon
+      const match = meta?.match(regex);
 
       if (match) {
         const matched = match[0];
@@ -201,7 +230,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
           title = null;
           meta = meta.replace(/:\s*/, "");
         } else {
-          meta = meta.replace(matched, "").trim();
+          meta = meta.replace(matched, "");
         }
       }
     }
@@ -209,16 +238,16 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
     // handle missing language
     if (
       !language &&
-      options?.handleMissingLanguageAs &&
-      typeof options.handleMissingLanguageAs === "string"
+      settings.handleMissingLanguageAs &&
+      typeof settings.handleMissingLanguageAs === "string"
     ) {
-      language = options.handleMissingLanguageAs;
+      language = settings.handleMissingLanguageAs;
     }
 
-    // remove if there is more spaces
+    // remove if there is more spaces in meta
     meta = meta?.replace(/\s+/g, " ").trim() ?? null;
 
-    // if the meta is empty, make it null
+    // if the title is empty, make it null
     if (title === "") title = null;
 
     // if the language is empty, make it null
@@ -231,6 +260,9 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
   };
 
   const visitor: Visitor<Code> = function (node, index, parent) {
+    /* istanbul ignore next */
+    if (!parent || typeof index === "undefined") return;
+
     const { title, language, meta } = extractLanguageAndTitle(node);
 
     // mutating the parent.children may effect the next iteration causing visit the same node "code"
@@ -255,10 +287,10 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
 
     if (containerNode) {
       // 1 is for replacing the "code" with the container which consists it already
-      parent?.children.splice(index!, 1, containerNode);
+      parent.children.splice(index, 1, containerNode);
     } else if (titleNode) {
       // 0 is for inserting the titleNode before the "code"
-      parent?.children.splice(index!, 0, titleNode);
+      parent.children.splice(index, 0, titleNode);
     }
   };
 
