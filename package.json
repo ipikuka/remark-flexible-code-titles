@@ -1,7 +1,7 @@
 {
   "name": "remark-flexible-code-titles",
-  "version": "1.1.4",
-  "description": "Remark plugin to add title or/and container for the code block with customizable properties",
+  "version": "1.2.0",
+  "description": "Remark plugin to add title or/and container for code blocks with customizable properties in markdown",
   "type": "module",
   "exports": "./dist/esm/index.js",
   "main": "./dist/esm/index.js",

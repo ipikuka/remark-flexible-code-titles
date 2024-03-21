@@ -8,7 +8,7 @@
 [![typescript][badge-typescript]][typescript-url]
 [![License][badge-license]][github-license-url]
 
-This package is a [unified][unified] ([remark][remark]) plugin to add title or/and container for the code block with customizable properties in markdown.
+This package is a [unified][unified] ([remark][remark]) plugin to add title or/and container for code blocks with customizable properties in markdown.
 
 **[unified][unified]** is a project that transforms content with abstract syntax trees (ASTs) using the new parser **[micromark][micromark]**. **[remark][remark]** adds support for markdown to unified. **[mdast][mdast]** is the Markdown Abstract Syntax Tree (AST) which is a specification for representing markdown in a syntax tree.
 
@@ -22,10 +22,10 @@ The plugin `remark-flexible-code-titles` can:
 
 - add `title` node above the `code` node, providing _custom tag name, custom class name and also additional properties_.
 - add `container` node for the `code` node, providing _custom tag name, custom class name and also additional properties_.
-- correct the syntax of code highligting directives on behalf of related rhype plugins (like [rehype-prism-plus][rehypeprismplus])
-- handle the titles even if no language provided,
+- correct the syntax of code highligting directives on behalf of related rehype plugins (like [rehype-prism-plus][rehypeprismplus])
+- handle the titles even if there is no language provided,
 - handle the titles composed by more than one word (handle spaces in the title),
-- support a fallback language as an option if the language is missing.
+- provide a fallback language as an option if the language is missing.
 
 ## Installation
 
@@ -43,7 +43,7 @@ yarn add remark-flexible-code-titles
 
 ## Usage
 
-Say we have the following file, `example.md`, which consists a code block. The code block's language is "javascript" and its title is "file.js" specified _after a colon_ `:`
+Say we have the following file, `example.md`, which consists a code block. The code block's language is "javascript" and its title is "file.js" specified _after a colon_ **`:`**
 
 ````markdown
 ```javascript:file.js
@@ -92,7 +92,7 @@ Without `remark-flexible-code-titles`, you’d get:
 </pre>
 ```
 
-You can use the `remark-flexible-code-titles` plugin **without a language**, _setting the title just after a colon_ **`:`**
+You can use the `remark-flexible-code-titles` **without a language**, _setting the title just after a colon_ **`:`**
 
 ````markdown
 ```:title
@@ -104,7 +104,7 @@ This is a line of pseudo code.
 
 All options are **optional** and some of them have **default values**.
 
-```typescript
+```tsx
 type RestrictedRecord = Record<string, unknown> & { className?: never };
 type PropertyFunction = (language?: string, title?: string) => RestrictedRecord;
 
@@ -134,7 +134,7 @@ use(remarkCodeTitles, {
 });
 ```
 
-If the option is `false`, the plugin doesn't add any `title` node.
+If the option is `false`, the plugin will not add any `title` node.
 
 ````markdown
 ```javascript:file.js
@@ -370,7 +370,7 @@ console.log("Hi")
 
 #### `handleMissingLanguageAs`
 
-It is a **string** option for providing fallback language if the language is missing.
+It is a **string** option for providing a fallback language if the language is missing.
 
 ```javascript
 use(remarkCodeTitles, {
@@ -378,7 +378,7 @@ use(remarkCodeTitles, {
 });
 ```
 
-Now, the class name of `<code>` elements will contain `language-unknown` if the language is missing. If this option wouldn't set, the `class` property would not be presented in the `<code>`element.
+Now, the class name of `<code>` elements will contain `language-unknown` if the language is missing. If this option was not set, the `class` property would not be presented in the `<code>`element.
 
 ````markdown
 ```
@@ -492,7 +492,7 @@ is going to produce the title `span` element just before the code block, like be
 > You need a rehype plugin like **rehype-prism-plus** for line highlighting and numbering features.
 
 ````markdown
-```javascript:file.js {1, 3-6} showLineNumbers
+```javascript:file.js {1,3-6} showLineNumbers
 let me = "ipikuka";
 ```
 ````
