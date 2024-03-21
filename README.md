@@ -3,7 +3,6 @@
 [![NPM version][badge-npm-version]][npm-package-url]
 [![NPM downloads][badge-npm-download]][npm-package-url]
 [![Build][badge-build]][github-workflow-url]
-[![License][github-license]][github-license-url]
 [![codecov](https://codecov.io/gh/ipikuka/remark-flexible-code-titles/graph/badge.svg?token=LJKU8SQ935)](https://codecov.io/gh/ipikuka/remark-flexible-code-titles)
 [![type-coverage](https://img.shields.io/badge/dynamic/json.svg?label=type-coverage&prefix=%E2%89%A5&suffix=%&query=$.typeCoverage.atLeast&uri=https%3A%2F%2Fraw.githubusercontent.com%2Fipikuka%2Fremark-flexible-code-titles%2Fmaster%2Fpackage.json)](https://github.com/ipikuka/remark-flexible-code-titles)
 [![typescript][badge-typescript]][typescript-url]
@@ -103,61 +102,326 @@ This is a line of pseudo code.
 
 ## Options
 
-All options are optional and have default values.
+All options are **optional** and some of them have **default values**.
 
-```javascript
+```typescript
+type RestrictedRecord = Record<string, unknown> & { className?: never };
+type PropertyFunction = (language?: string, title?: string) => RestrictedRecord;
+
 use(remarkCodeTitles, {
-  title: boolean, // optional, default is true
-  titleTagName: string, // optional, default is "div"
-  titleClassName: string, // optional, default is "remark-code-title"
-  titleProperties: (language?: string, title?: string) => Record<string, unknown>, // optional, default is undefined
-  container: boolean, // optional, default is true
-  containerTagName: string, // optional, default is "div"
-  containerClassName: string, // optional, default is "remark-code-container"
-  containerProperties: (language?: string, title?: string) => Record<string, unknown>, // optional, default is undefined
-  handleMissingLanguageAs: string, // optional, default is undefined
-})
+  title?: boolean; // default is true
+  titleTagName?: string; // default is "div"
+  titleClassName?: string; // default is "remark-code-title"
+  titleProperties?: PropertyFunction;
+  container?: boolean; // default is true
+  containerTagName?: string; // default is "div"
+  containerClassName?: string; // default is "remark-code-container"
+  containerProperties?: PropertyFunction;
+  handleMissingLanguageAs?: string;
+  tokenForSpaceInTitle?: string;
+} as CodeTitleOptions);
 ```
 
 #### `title`
 
-It is a **boolean** option for not adding any `title` node. If the option is provided as `false`, the plugin will not add the `title` node. Default is `true`, which adds a `title` node if a title is provided after a colon in the language part of the code block.
+It is a **boolean** option for whether or not to add a `title` node.
+
+By default, it is `true`, meaningly adds a `title` node if a title is provided in the language part of the code block.
+
+```javascript
+use(remarkCodeTitles, {
+  title: false,
+});
+```
+
+If the option is `false`, the plugin doesn't add any `title` node.
+
+````markdown
+```javascript:file.js
+console.log("Hi")
+```
+````
+
+```html
+<div class="remark-code-container">
+  <!-- there is no title element ! -->
+  <pre>
+    <code class="language-javascript">console.log("Hi")</code>
+  <pre>
+</div>
+```
 
 #### `titleTagName`
 
-It is a **string** option for providing custom HTML tag name for the `title` node other than `div`.
+It is a **string** option for providing custom HTML tag name for `title` nodes.
+
+By default, it is `div`.
+
+```javascript
+use(remarkCodeTitles, {
+  titleTagName: "span",
+});
+```
+
+Now, the title element tag names will be `span`.
+
+````markdown
+```javascript:file.js
+console.log("Hi")
+```
+````
+
+```html
+<div class="remark-code-container">
+  <span class="remark-code-title">file.js</span>
+  <pre>
+    <code class="language-javascript">console.log("Hi")</code>
+  <pre>
+</div>
+```
 
 #### `titleClassName`
 
-It is a **string** option for providing custom className for the `title` node other than `remark-code-title` .
+It is a **string** option for providing custom class name for `title` nodes.
+
+By default, it is `remark-code-title`, and all title elements' class names will contain `remark-code-title`.
+
+```javascript
+use(remarkCodeTitles, {
+  titleClassName: "custom-code-title",
+});
+```
+
+Now, the title element class names will be `custom-code-title`.
+
+````markdown
+```javascript:file.js
+console.log("Hi")
+```
+````
+
+```html
+<div class="remark-code-container">
+  <div class="custom-code-title">file.js</div>
+  <pre>
+    <code class="language-javascript">console.log("Hi")</code>
+  <pre>
+</div>
+```
 
 #### `titleProperties`
 
-It is an option to set additional properties for the `title` node. It is a callback function that takes the `language` and the `title` as optional arguments and returns the object which is going to be used for adding additional properties into the `title` node.
+It is a **callback** `(language?: string, title?: string) => Record<string, unknown> & { className?: never }` option to set additional properties for the `title` node.
+
+The callback function that takes the `language` and the `title` as optional arguments and returns **object** which is going to be used for adding additional properties into the `title` node.
+
+**The `className` key is forbidden and effectless in the returned object.**
+
+```javascript
+use(remarkCodeTitles, {
+  titleProperties(language, title) {
+    return {
+      title,
+      ["data-language"]: language,
+    };
+  },
+});
+```
+
+Now, the title elements will contain `title` and `data-color` properties.
+
+````markdown
+```javascript:file.js
+console.log("Hi")
+```
+````
+
+```html
+<div class="remark-code-container">
+  <div class="remark-code-title" title="file.js" data-language="javascript">file.js</div>
+  <pre>
+    <code class="language-javascript">console.log("Hi")</code>
+  <pre>
+</div>
+```
 
 #### `container`
 
-It is a **boolean** option for not adding any `container` node. If the option is provided as `false`, the plugin will not add the `container` node. Default is `true`, which adds a `container` node.
+It is a **boolean** option for whether or not to add a `container` node.
+
+By default, it is `true`, meaningly adds a `container` node.
+
+```javascript
+use(remarkCodeTitles, {
+  container: false,
+});
+```
+
+If the option is `false`, the plugin doesn't add any `container` node.
+
+````markdown
+```javascript:file.js
+console.log("Hi")
+```
+````
+
+```html
+<!-- there is no container element ! -->
+<div class="remark-code-title">file.js</div>
+<pre>
+  <code class="language-javascript">console.log("Hi")</code>
+<pre>
+
+```
 
 #### `containerTagName`
 
-It is a **string** option for providing custom HTML tag name for the `container` node other than `div`.
+It is a **string** option for providing custom HTML tag name for `container` nodes.
+
+By default, it is `div`.
+
+```javascript
+use(remarkCodeTitles, {
+  containerTagName: "section",
+});
+```
+
+Now, the container element tag names will be `section`.
+
+````markdown
+```javascript:file.js
+console.log("Hi")
+```
+````
+
+```html
+<section class="remark-code-container">
+  <div class="remark-code-title">file.js</div>
+  <pre>
+    <code class="language-javascript">console.log("Hi")</code>
+  <pre>
+</div>
+```
 
 #### `containerClassName`
 
-It is a **string** option for providing custom className for the `container` node other than `remark-code-container`.
+It is a **string** option for providing custom class name for `container` nodes.
+
+By default, it is `remark-code-container`, and all container elements' class names will contain `remark-code-container`.
+
+```javascript
+use(remarkCodeTitles, {
+  containerClassName: "custom-code-container",
+});
+```
+
+Now, the container element class names will be `custom-code-container`.
+
+````markdown
+```javascript:file.js
+console.log("Hi")
+```
+````
+
+```html
+<div class="custom-code-container">
+  <div class="remark-code-title">file.js</div>
+  <pre>
+    <code class="language-javascript">console.log("Hi")</code>
+  <pre>
+</div>
+```
 
 #### `containerProperties`
 
-It is an option to set additional properties for the `container` node. It is a callback function that takes the `language` and the `title` as optional arguments and returns the object which is going to be used for adding additional properties into the `container` node.
+It is a **callback** `(language?: string, title?: string) => Record<string, unknown> & { className?: never }` option to set additional properties for the `container` node.
+
+The callback function that takes the `language` and the `title` as optional arguments and returns **object** which is going to be used for adding additional properties into the `container` node.
+
+**The `className` key is forbidden and effectless in the returned object.**
+
+```javascript
+use(remarkCodeTitles, {
+  titleProperties(language, title) {
+    return {
+      title,
+      ["data-language"]: language,
+    };
+  },
+});
+```
+
+Now, the container elements will contain `title` and `data-color` properties.
+
+````markdown
+```javascript:file.js
+console.log("Hi")
+```
+````
+
+```html
+<div class="remark-code-container" title="file.js" data-language="javascript">
+  <div class="remark-code-title">file.js</div>
+  <pre>
+    <code class="language-javascript">console.log("Hi")</code>
+  <pre>
+</div>
+```
 
 #### `handleMissingLanguageAs`
 
-It is a **string** option for providing custom language if the language is missing.
+It is a **string** option for providing fallback language if the language is missing.
+
+```javascript
+use(remarkCodeTitles, {
+  handleMissingLanguageAs: "unknown",
+});
+```
+
+Now, the class name of `<code>` elements will contain `language-unknown` if the language is missing. If this option wouldn't set, the `class` property would not be presented in the `<code>`element.
+
+````markdown
+```
+Hello from code block
+```
+````
+
+```html
+<div class="remark-code-container">
+  <pre>
+    <code class="language-unknown">Hello from code block</code>
+  <pre>
+</div>
+```
 
 #### `tokenForSpaceInTitle`
 
-It is a **string** option for making the title up with more than one word.
+It is a **string** option for composing the title with more than one word.
+
+Normally, the `remark-flexible-code-titles` can match a code title which is the word that comes after a colon and ends in the first space it encounters. This option is provided to replace a space with a token in order to specify a code title consisting of more than one word.
+
+```javascript
+use(remarkCodeTitles, {
+  tokenForSpaceInTitle: "@",
+});
+```
+
+Now, the titles that have more than one word can be set using the token `@`.
+
+````markdown
+```bash:Useful@Bash@Commands
+mkdir project-directory
+```
+````
+
+```html
+<div class="remark-code-container">
+  <div class="remark-code-title">Useful Bash Commands</div>
+  <pre>
+    <code class="language-bash">mkdir project-directory</code>
+  <pre>
+</div>
+```
 
 ## Examples:
 
@@ -216,48 +480,26 @@ use(remarkCodeTitles, {
 is going to produce the title `span` element just before the code block, like below:
 
 ```html
-<span class="custom-code-title" data-language="javascript" title="file.js">
-  file.js
-</span>
+<span class="custom-code-title" data-language="javascript" title="file.js">file.js</span>
 <pre>
   <code class="language-javascript">let me = "ipikuka";</code>
 </pre>
 ```
 
-#### Example for handling missing language
+#### Example for line highlighting and numbering
 
-````markdown
-```:filename
-It is a line that does not related with any language.
-```
-````
-
-```javascript
-use(remarkCodeTitles, {
-  container: false,
-  handleMissingLanguageAs: "unknown",
-});
-```
-
-is going to produce the title `span` element just before the code block, like below:
-
-```html
-<div class="remark-code-title">filename</div>
-<pre>
-  <code class="language-unknown">It is a line that does not related with any language.</code>
-</pre>
-```
-
-#### Example for line highlighting and line numbering options (for example: using with _rehype-prism-plus_)
+> [!NOTE]
+> You need a rehype plugin like **rehype-prism-plus** for line highlighting and numbering features.
 
 ````markdown
 ```javascript:file.js {1, 3-6} showLineNumbers
 let me = "ipikuka";
-// the other codes...
 ```
 ````
 
-Normally, the above markdown code will be parsed and rehyped as expected, with using _remark-flexible-code-titles_ for `the code title` and using the _rehype-prism-plus_ for `line highlighting and numbering`. But, if you want to highlight and number the lines **without specifying language**, you will get the language of the code block as forexample `language-{2}` like strings. Let me give an example:
+The `remark-flexible-code-titles` takes the line highlighting and numbering syntax into consideration, and passes that information to other remark and rehype plugins.
+
+But, if you want to highlight and number the lines **without specifying language**, you will get the language of the code block as for example `language-{2}` like strings. Let me give an example:
 
 ````markdown
 ```{2} showLineNumbers
@@ -273,58 +515,57 @@ The above markdown, with no language provided, will lead to produce a mdast "cod
   "type": "code",
   "lang": "{2}",
   "meta": "showLineNumbers"
-  // other properties
 }
 ```
 
 As a result, the html `code` element will have wrong language `language-{2}`:  
-_(The class attribute in the `code` element is added by the code highlighting plugin)_
+_(The class `code-highlight` in the `code` element is added by the rehype plugin `rehype-prism-plus`)_
 
 ```html
 <code class="language-{2} code-highlight">...</code>
 ```
 
-The job the `remark-flexible-code-titles` handles apart from providing code titles is **to correct the language** as well, producing the below `mdast` and as a result `code` element without language.
+The `remark-flexible-code-titles` not only adds `title` and `container` elements but also **corrects the language** producing the below `mdast` which will lead the `<code>` element has accurate language or not have language as it sould be.
 
 ```json
 {
   "type": "code",
   "lang": null,
   "meta": "{2} showLineNumbers"
-  // other properties
 }
 ```
 
 ```html
-<code class="code-highlight">...highlighted and numbered lines...</code>
+<code class="code-highlight">
+  <!-- highlighted and numbered lines -->
+</code>
 ```
 
-You can provide the `title` without any language just after a colon `:`
+If there is no space between the parts (_title, line range string and "showLineNumbers"_), or there is extra spaces inside the _line range string_, line highlighting or numbering features by the rehype plugin will not work. **The `remark-flexible-code-titles` can handles and corrects this kind of mis-typed situations**. 
 
 ````markdown
-```:title
-lines...
+```typescript:title{ 1, 3 - 6 }showLineNumbers
+content
 ```
 ````
 
-Further, even if there is no space between the _title_ and the _line range string_, or giving any extra spaces inside the _line range string_ around the dash `-`, the `remark-flexible-code-titles` can handles this kind of **mis-typed situations**.
-
-````markdown
-```:title{ 1, 3 - 6 }
-normally there should be one space between parts `language:title` and `{_line range string inside curly braces_}`
-if there are spaces around the dash, the lines is not going to be highlighted
-`remark-flexible-code-titles` solves this kind of mis-typed situations
-```
-````
-
-With no problem, even if there is mis-typed syntax, the `remark-flexible-code-titles` with default options ensures to produce the following `mdast` and `html` for the above `markdown code block`:
+There is mis-typed syntax in above markdown example; and without `remark-flexible-code-titles` will cause to produce the following `mdast`; and the rehype plugin not to work properly:
 
 ```json
 {
   "type": "code",
-  "lang": null,
-  "meta": "{1,3-6}"
-  // other properties
+  "lang": "typescript:title{",
+  "meta": " 1, 3 - 6 }showLineNumbers"
+}
+```
+
+The `remark-flexible-code-titles` will correct the syntax and ensure to produce the following `mdast` and `html`:
+
+```json
+{
+  "type": "code",
+  "lang": "typescript",
+  "meta": "{1,3-6} showLineNumbers"
 }
 ```
 
@@ -332,14 +573,44 @@ With no problem, even if there is mis-typed syntax, the `remark-flexible-code-ti
 <div class="remark-code-container">
   <div class="remark-code-title">title</div>
   <pre>
-    <code class="code-highlight">...highlighted lines as expected...</code>
+    <code class="language-typescript code-highlight">
+      <!-- highlighted and numbered lines -->
+    </code>
   </pre>
 </div>
 ```
 
-### Another flexible usage:
+#### Example for providing a title without any language
 
-You can use this plugin without providing _no title_, _no container_ with the options `{title: false, container: false}` just for only correcting the _line range strings_ and using this kind of parameters **if no language provided in markdown**. Hey, that is the flexibility this plugin's name comes from.
+You can provide a `title` without any language just using a colon **`:`** at the beginning.
+
+````markdown
+```:title
+content
+```
+````
+
+```html
+<div class="remark-code-container">
+  <div class="remark-code-title">title</div>
+  <pre>
+    <code>content</code>
+  </pre>
+</div>
+```
+
+### Another flexible usage
+
+You can use `remark-flexible-code-titles` **just for only correcting language, line highlighting and numbering syntax** on behalf of related rehype plugins.
+
+```javascript
+use(remarkCodeTitles, {
+  container: false,
+  title: false,
+});
+```
+
+Now, the `remark-flexible-code-titles` will not add any node, but will correct language, line highlighting and numbering syntax.
 
 ## Syntax tree
 

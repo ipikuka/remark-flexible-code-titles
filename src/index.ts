@@ -37,7 +37,8 @@ declare module "mdast" {
 
 type StringOrNull = string | null;
 
-type PropertyFunction = (language?: string, title?: string) => Record<string, unknown>;
+type RestrictedRecord = Record<string, unknown> & { className?: never };
+type PropertyFunction = (language?: string, title?: string) => RestrictedRecord;
 
 export type CodeTitleOptions = {
   title?: boolean;
