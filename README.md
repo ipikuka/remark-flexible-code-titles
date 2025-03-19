@@ -653,6 +653,10 @@ I like to contribute the Unified / Remark / MDX ecosystem, so I recommend you to
 
 - [`rehype-pre-language`](https://www.npmjs.com/package/rehype-pre-language)
   – Rehype plugin to add language information as a property to `pre` element
+- [`rehype-highlight-code-lines`](https://www.npmjs.com/package/rehype-highlight-code-lines)
+  – Rehype plugin to add line numbers to code blocks and allow highlighting of desired code lines
+- [`rehype-code-meta`](https://www.npmjs.com/package/rehype-code-meta)
+  – Rehype plugin to copy `code.data.meta` to `code.properties.metastring`
 
 ### My Recma Plugins
 
@@ -660,6 +664,12 @@ I like to contribute the Unified / Remark / MDX ecosystem, so I recommend you to
   – Recma plugin to set the default value `() => null` for the Components in MDX in case of missing or not provided so as not to throw an error
 - [`recma-mdx-change-props`](https://www.npmjs.com/package/recma-mdx-change-props)
   – Recma plugin to change the `props` parameter into the `_props` in the `function _createMdxContent(props) {/* */}` in the compiled source in order to be able to use `{props.foo}` like expressions. It is useful for the `next-mdx-remote` or `next-mdx-remote-client` users in `nextjs` applications.
+- [`recma-mdx-change-imports`](https://www.npmjs.com/package/recma-mdx-change-imports)
+  – Recma plugin to convert import declarations for assets and media with relative links into variable declarations with string URLs, enabling direct asset URL resolution in compiled MDX.
+- [`recma-mdx-import-media`](https://www.npmjs.com/package/recma-mdx-import-media)
+  – Recma plugin to turn media relative paths into import declarations for both markdown and html syntax in MDX.
+- [`recma-mdx-import-react`](https://www.npmjs.com/package/recma-mdx-import-react)
+  – Recma plugin to ensure getting `React` instance from the arguments and to make the runtime props `{React, jsx, jsxs, jsxDev, Fragment}` is available in the dynamically imported components in the compiled source of MDX.
 
 ## License
 
