@@ -3,7 +3,7 @@ on:
   - pull_request
   - push
 jobs:
-  test-coverage:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,13 +19,30 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: npm
       - run: npm ci
-      - run: npm run format
       - run: npm test
+      - run: npm run format
+  coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test-coverage
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           directory: ./coverage/
-          files: ./coverage-final.json
+          files: ./coverage.json
           fail_ci_if_error: true
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
