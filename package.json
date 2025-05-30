@@ -11,10 +11,12 @@
     "format": "npm run prettier && npm run lint",
     "prettier": "prettier --write .",
     "lint": "eslint .",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs --coverage",
-    "test:file": "NODE_OPTIONS=--experimental-vm-modules jest --config ./jest.config.cjs test.plugin.spec.ts",
+    "test": "vitest --watch=false",
+    "test:watch": "vitest",
+    "test:file": "vitest test.plugin.spec.ts",
     "prepack": "npm run build",
-    "prepublishOnly": "npm test && npm run format"
+    "prepublishOnly": "npm run test && npm run format && npm run test-coverage",
+    "test-coverage": "vitest run --coverage"
   },
   "files": [
     "dist/",
@@ -45,33 +47,30 @@
     "url": "https://github.com/ipikuka/remark-flexible-code-titles/issues"
   },
   "devDependencies": {
-    "@types/dedent": "^0.7.2",
-    "@types/jest": "^29.5.14",
     "@types/node": "^22.15.24",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
+    "@vitest/coverage-v8": "^3.1.4",
     "dedent": "^1.6.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.4.0",
-    "jest": "^29.7.0",
     "mdast-util-from-markdown": "^2.0.2",
     "mdast-util-gfm": "^3.1.0",
     "micromark-extension-gfm": "^3.0.0",
     "prettier": "^3.5.3",
-    "prettier-2": "npm:prettier@^2.8.8",
     "rehype-format": "^5.0.1",
     "rehype-stringify": "^10.0.1",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "rimraf": "^5.0.10",
-    "ts-jest": "^29.3.4",
     "type-coverage": "^2.29.7",
     "typescript": "^5.8.3",
     "unified": "^11.0.5",
     "unist-util-find": "^3.0.0",
-    "vfile": "^6.0.3"
+    "vfile": "^6.0.3",
+    "vitest": "^3.1.4"
   },
   "dependencies": {
     "@types/mdast": "^4.0.4",

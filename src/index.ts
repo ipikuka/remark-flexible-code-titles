@@ -292,7 +292,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
   };
 
   const visitor: Visitor<Code> = function (node, index, parent) {
-    /* istanbul ignore next */
+    /* v8 ignore next */
     if (!parent || typeof index === "undefined") return;
 
     const { title, language, meta } = extractLanguageAndTitle(node);

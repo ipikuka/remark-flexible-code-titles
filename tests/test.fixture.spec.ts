@@ -1,3 +1,4 @@
+import { it, expect } from "vitest";
 import dedent from "dedent";
 
 import { processMDAST } from "./util/index";
