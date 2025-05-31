@@ -2,12 +2,11 @@ import { visit, type Visitor } from "unist-util-visit";
 import type { Plugin, Transformer } from "unified";
 import type { Paragraph, Code, Root, Data, BlockContent, Parent } from "mdast";
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>;
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ContainerData extends Data {}
 
 interface Container extends Parent {
@@ -133,7 +132,9 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
           (typeof v === "string" && v === "") ||
           (Array.isArray(v) && (v as unknown[]).length === 0)
         ) {
-          properties && (properties[k] = undefined);
+          if (properties) {
+            properties[k] = undefined;
+          }
         }
 
         if (k === "className") delete properties?.["className"];
@@ -168,7 +169,9 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
           (typeof v === "string" && v === "") ||
           (Array.isArray(v) && (v as unknown[]).length === 0)
         ) {
-          properties && (properties[k] = undefined);
+          if (properties) {
+            properties[k] = undefined;
+          }
         }
 
         if (k === "className") delete properties?.["className"];

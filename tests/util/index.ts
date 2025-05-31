@@ -55,7 +55,7 @@ export const processMDAST = (
 
   if (!code) return;
 
-  // @ts-expect-error
+  // @ts-expect-error An argument for 'file' was not provided
   plugin(options)(tree);
 
   const code_ = find<Code>(tree, { type: "code" });
