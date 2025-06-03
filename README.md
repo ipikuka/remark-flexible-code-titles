@@ -681,17 +681,6 @@ I like to contribute the Unified / Remark / MDX ecosystem, so I recommend you to
 
 [MIT License](./LICENSE) © ipikuka
 
-### Keywords
-
-🟩 [unified][unifiednpm] 🟩 [remark][remarknpm] 🟩 [remark plugin][remarkpluginnpm] 🟩 [mdast][mdastnpm] 🟩 [markdown][markdownnpm] 🟩 [remark code titles][remarkcodetitlesnpm]
-
-[unifiednpm]: https://www.npmjs.com/search?q=keywords:unified
-[remarknpm]: https://www.npmjs.com/search?q=keywords:remark
-[remarkpluginnpm]: https://www.npmjs.com/search?q=keywords:remark%20plugin
-[mdastnpm]: https://www.npmjs.com/search?q=keywords:mdast
-[markdownnpm]: https://www.npmjs.com/search?q=keywords:markdown
-[remarkcodetitlesnpm]: https://www.npmjs.com/search?q=keywords:remark%20code%20titles
-
 [unified]: https://github.com/unifiedjs/unified
 [micromark]: https://github.com/micromark/micromark
 [remark]: https://github.com/remarkjs/remark
