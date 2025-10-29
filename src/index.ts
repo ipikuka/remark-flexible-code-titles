@@ -122,24 +122,18 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
   */
 
   const constructTitle = (language: string, title: string): Paragraph => {
-    let properties: Record<string, unknown> | undefined;
+    const properties = settings.titleProperties?.(language, title) ?? {};
 
-    if (settings.titleProperties) {
-      properties = settings.titleProperties(language, title);
+    Object.entries(properties).forEach(([k, v]) => {
+      if (
+        (typeof v === "string" && v === "") ||
+        (Array.isArray(v) && (v as unknown[]).length === 0)
+      ) {
+        properties[k] = undefined;
+      }
 
-      Object.entries(properties).forEach(([k, v]) => {
-        if (
-          (typeof v === "string" && v === "") ||
-          (Array.isArray(v) && (v as unknown[]).length === 0)
-        ) {
-          if (properties) {
-            properties[k] = undefined;
-          }
-        }
-
-        if (k === "className") delete properties?.["className"];
-      });
-    }
+      if (k === "className") delete properties?.["className"];
+    });
 
     return {
       type: "paragraph",
@@ -159,24 +153,18 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
     language: string,
     title: string,
   ): Container => {
-    let properties: Record<string, unknown> | undefined;
+    const properties = settings.containerProperties?.(language, title) ?? {};
 
-    if (settings.containerProperties) {
-      properties = settings.containerProperties(language, title);
+    Object.entries(properties).forEach(([k, v]) => {
+      if (
+        (typeof v === "string" && v === "") ||
+        (Array.isArray(v) && (v as unknown[]).length === 0)
+      ) {
+        properties[k] = undefined;
+      }
 
-      Object.entries(properties).forEach(([k, v]) => {
-        if (
-          (typeof v === "string" && v === "") ||
-          (Array.isArray(v) && (v as unknown[]).length === 0)
-        ) {
-          if (properties) {
-            properties[k] = undefined;
-          }
-        }
-
-        if (k === "className") delete properties?.["className"];
-      });
-    }
+      if (k === "className") delete properties?.["className"];
+    });
 
     return {
       type: "container",
@@ -254,6 +242,8 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
       const regex = /:\s*.*?(?=[\s{]|$)/; // to find :title with colon
       const match = meta?.match(regex);
 
+      // classic V8 coverage false negative
+      /* v8 ignore next -- @preserve */
       if (match) {
         const matched = match[0];
         title = matched.replace(/:\s*/, "");
@@ -295,7 +285,7 @@ export const plugin: Plugin<[CodeTitleOptions?], Root> = (options) => {
   };
 
   const visitor: Visitor<Code> = function (node, index, parent) {
-    /* v8 ignore next */
+    /* v8 ignore next -- @preserve */
     if (!parent || typeof index === "undefined") return;
 
     const { title, language, meta } = extractLanguageAndTitle(node);
