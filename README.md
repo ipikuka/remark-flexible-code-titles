@@ -16,9 +16,7 @@ This package is a [**unified**][unified] ([**remark**][remark]) plugin **to add 
 
 ## When should I use this?
 
-This plugin is useful if you want to **add title and container or any of two** for code blocks in markdown. 
-
-The plugin `remark-flexible-code-titles` can:
+**`remark-flexible-code-titles`** is useful if you want to **add title and container or any of two** for code blocks in markdown. It is able to:
 
 - add `title` node above the `code` node, providing _custom tag name, custom class name and also additional properties_.
 - add `container` node for the `code` node, providing _custom tag name, custom class name and also additional properties_.
@@ -47,7 +45,7 @@ Say we have the following file, `example.md`, which consists a code block. The c
 
 ````markdown
 ```javascript:file.js
-/* code block */
+<!-- code block -->
 ```
 ````
 
@@ -79,20 +77,26 @@ Now, running `node example.js` yields:
 
 ```html
 <div class="remark-code-container">
-  <div class="remark-code-title">title.js</div>
-  <!-- <pre><code> elements -->
+  <div class="remark-code-title">file.js</div>
+  <pre>
+    <code class="language-javascript">
+      <!-- code block -->
+    </code> 
+  </pre>
 </div>
 ```
 
-Without `remark-flexible-code-titles`, you’d get:
+Without **`remark-flexible-code-titles`**, you’d get:
 
 ```html
 <pre>
-   <code class="language-javascript:file.js"><!-- code block --></code> 
+  <code class="language-javascript:file.js">
+    <!-- code block -->
+  </code> 
 </pre>
 ```
 
-You can use the `remark-flexible-code-titles` **without a language**, _setting the title just after a colon_ **`:`**
+You can use **`remark-flexible-code-titles`** even **without a language**, _setting the title just after a colon_ **`:`**
 
 ````markdown
 ```:title
@@ -398,7 +402,7 @@ Hello from code block
 
 It is a **string** option for composing the title with more than one word.
 
-Normally, the `remark-flexible-code-titles` can match a code title which is the word that comes after a colon and ends in the first space it encounters. This option is provided to replace a space with a token in order to specify a code title consisting of more than one word.
+Normally, **`remark-flexible-code-titles`** can match a code title which is the word that comes after a colon and ends in the first space it encounters. This option is provided to replace a space with a token in order to specify a code title consisting of more than one word.
 
 ```javascript
 use(remarkCodeTitles, {
@@ -497,7 +501,7 @@ let me = "ipikuka";
 ```
 ````
 
-The `remark-flexible-code-titles` takes the line highlighting and numbering syntax into consideration, and passes that information to other remark and rehype plugins.
+**`remark-flexible-code-titles`** takes the line highlighting and numbering syntax into consideration, and passes that information to other remark and rehype plugins.
 
 But, if you want to highlight and number the lines **without specifying language**, you will get the language of the code block as for example `language-{2}` like strings. Let me give an example:
 
@@ -525,7 +529,7 @@ _(The class `code-highlight` in the `code` element is added by the rehype plugin
 <code class="language-{2} code-highlight">...</code>
 ```
 
-The `remark-flexible-code-titles` not only adds `title` and `container` elements but also **corrects the language** producing the below `mdast` which will lead the `<code>` element has accurate language or not have language as it sould be.
+**`remark-flexible-code-titles`** not only adds `title` and `container` elements but also **corrects the language** producing the below `mdast` which will lead the `<code>` element has accurate language or not have language as it sould be.
 
 ```json
 {
@@ -541,7 +545,7 @@ The `remark-flexible-code-titles` not only adds `title` and `container` elements
 </code>
 ```
 
-If there is no space between the parts (_title, line range string and "showLineNumbers"_), or there is extra spaces inside the _line range string_, line highlighting or numbering features by the rehype plugin will not work. **The `remark-flexible-code-titles` can handles and corrects this kind of mis-typed situations**. 
+If there is no space between the parts (_title, line range string and "showLineNumbers"_), or there is extra spaces inside the _line range string_, line highlighting or numbering features by the rehype plugin will not work. **`remark-flexible-code-titles` can handles and corrects this kind of mis-typed situations**. 
 
 ````markdown
 ```typescript:title{ 1, 3 - 6 }showLineNumbers
@@ -549,7 +553,7 @@ content
 ```
 ````
 
-There is mis-typed syntax in above markdown example; and without `remark-flexible-code-titles` will cause to produce the following `mdast`; and the rehype plugin not to work properly:
+There is mis-typed syntax in above markdown example; and without **`remark-flexible-code-titles`** will cause to produce the following `mdast`; and the rehype plugin not to work properly:
 
 ```json
 {
@@ -559,7 +563,7 @@ There is mis-typed syntax in above markdown example; and without `remark-flexibl
 }
 ```
 
-The `remark-flexible-code-titles` will correct the syntax and ensure to produce the following `mdast` and `html`:
+**`remark-flexible-code-titles`** will correct the syntax and ensure to produce the following `mdast` and `html`:
 
 ```json
 {
@@ -601,7 +605,7 @@ content
 
 ### Another flexible usage
 
-You can use `remark-flexible-code-titles` **just for only correcting language, line highlighting and numbering syntax** on behalf of related rehype plugins.
+You can use **`remark-flexible-code-titles**` **just for only correcting language, line highlighting and numbering syntax** on behalf of related rehype plugins.
 
 ```javascript
 use(remarkCodeTitles, {
@@ -610,7 +614,7 @@ use(remarkCodeTitles, {
 });
 ```
 
-Now, the `remark-flexible-code-titles` will not add any node, but will correct language, line highlighting and numbering syntax.
+Now, **`remark-flexible-code-titles`** will not add any node, but will correct language, line highlighting and numbering syntax.
 
 ## Syntax tree
 
@@ -626,7 +630,7 @@ This plugin works with `unified` version 6+ and `remark` version 7+. It is compa
 
 ## Security
 
-Use of `remark-flexible-code-titles` does not involve rehype (hast) or user content so there are no openings for cross-site scripting (XSS) attacks.
+Use of **`remark-flexible-code-titles`** does not involve rehype (hast) or user content so there are no openings for cross-site scripting (XSS) attacks.
 
 ## My Plugins
 
