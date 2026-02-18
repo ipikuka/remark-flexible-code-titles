@@ -11,12 +11,12 @@
     "format": "npm run prettier && npm run lint",
     "prettier": "prettier --write .",
     "lint": "eslint .",
-    "test": "vitest --watch=false",
+    "test": "vitest run",
     "test:watch": "vitest",
     "test:file": "vitest test.plugin.spec.ts",
+    "test-coverage": "vitest run --coverage",
     "prepack": "npm run build",
-    "prepublishOnly": "npm run test && npm run format && npm run test-coverage",
-    "test-coverage": "vitest run --coverage"
+    "prepublishOnly": "npm run format && npm run test-coverage"
   },
   "files": [
     "dist/",
