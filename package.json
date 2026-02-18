@@ -82,7 +82,7 @@
   },
   "dependencies": {
     "@types/mdast": "^4.0.4",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.1.0"
   },
   "peerDependencies": {
     "unified": "^11"
