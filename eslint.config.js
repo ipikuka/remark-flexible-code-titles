@@ -1,10 +1,11 @@
+import { defineConfig } from "eslint/config";
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import globals from "globals";
 import vitest from "@vitest/eslint-plugin";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 
-export default tseslint.config(
+export default defineConfig(
   {
     ignores: [
       ".DS_Store",
@@ -26,6 +27,7 @@ export default tseslint.config(
     },
   },
   {
+    name: "javascript",
     files: ["**/*.js"],
     ...tseslint.configs.disableTypeChecked,
   },
