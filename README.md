@@ -123,8 +123,11 @@ This is a line of pseudo code.
 All options are **optional** and some of them have **default values**.
 
 ```tsx
-type RestrictedRecord = Record<string, unknown> & { className?: never };
-type PropertyFunction = (language?: string, title?: string) => RestrictedRecord;
+interface Properties {
+    [PropertyName: string]: boolean | number | string | null | undefined | Array<string | number>;
+}
+
+type PropertyFunction = (language?: string, title?: string) => Omit<Properties, 'className'> & { className?: never };
 
 use(remarkCodeTitles, {
   title?: boolean; // default is true
