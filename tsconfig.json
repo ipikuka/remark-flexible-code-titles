@@ -12,5 +12,5 @@
     "noEmit": true,
     "noImplicitReturns": true
   },
-  "include": ["src", "tests"],
+  "include": ["src", "tests"]
 }

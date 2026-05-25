@@ -38,10 +38,13 @@ type StringOrNull = string | null;
 
 // from "hast", but I want to avoid importing that whole package just for this type
 interface Properties {
-    [PropertyName: string]: boolean | number | string | null | undefined | Array<string | number>;
+  [PropertyName: string]: boolean | number | string | null | undefined | Array<string | number>;
 }
 
-type PropertyFunction = (language?: string, title?: string) => Omit<Properties, 'className'> & { className?: never };
+type PropertyFunction = (
+  language?: string,
+  title?: string,
+) => Omit<Properties, "className"> & { className?: never };
 
 export type CodeTitleOptions = {
   title?: boolean;
