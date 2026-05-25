@@ -11,7 +11,7 @@ import { gfm as gfmExt } from "micromark-extension-gfm";
 import { gfmFromMarkdown } from "mdast-util-gfm";
 import { find } from "unist-util-find";
 
-import plugin, { CodeTitleOptions } from "../../src";
+import plugin, { CodeTitleOptions } from "../../src/index.js";
 
 const compilerCreator = (options?: CodeTitleOptions) =>
   unified()

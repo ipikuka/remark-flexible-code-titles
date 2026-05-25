@@ -9,8 +9,8 @@
     "declarationMap": true,
     "sourceMap": true,
     "inlineSources": true,
-    "outDir": "dist",
+    "noEmit": true,
     "noImplicitReturns": true
   },
-  "include": ["src"]
+  "include": ["src", "tests"],
 }

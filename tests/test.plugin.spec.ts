@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
 import dedent from "dedent";
 
-import { type CodeTitleOptions } from "../src/index";
+import { type CodeTitleOptions } from "../src/index.js";
 
-import { process } from "./util/index";
+import { process } from "./util/index.js";
 
 const handleMissingLanguage: CodeTitleOptions = {
   handleMissingLanguageAs: "unknown",
