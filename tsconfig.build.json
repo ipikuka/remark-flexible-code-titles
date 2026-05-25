@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "noEmit": false,
-    "outDir": "dist"
+    "outDir": "dist",
+    "tsBuildInfoFile": "./tsconfig.build.tsbuildinfo"
   },
   "extends": "./tsconfig.json",
   "include": ["src"]
